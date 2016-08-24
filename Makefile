@@ -1,10 +1,10 @@
-TARGETS = pf
+TARGETS = pf bin2asc
 LIBS = -lm -lgsl -lgslcblas
 
 all: $(TARGETS)
 
 %: %.c
-	gcc -o pf pf.c -lm -lgsl -lgslcblas
+	gcc -o $@ $< $(LIBS)
 
 clean:
 	-rm $(TARGETS)

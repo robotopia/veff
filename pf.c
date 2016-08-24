@@ -111,7 +111,7 @@ int main( int argc, char *argv[] )
   double temp_max_x, temp_min_x;
   double temp_max_y, temp_min_y;
   double val;
-  int is_dB = 1; // indicates power values are log (dB) values
+  int is_dB = 0; // indicates power values are log (dB) values
   int is_first_time = 1;
   int n_pixels = 0;
 
@@ -276,7 +276,7 @@ m++;
   }
 
   printf("Calculating Hough transform..."); fflush(stdout);
-  printf("%4d%% done", percent_done);       fflush(stdout);
+  printf("%4d%%", percent_done);       fflush(stdout);
 
   // Go through the data and sum up the eligible points
   n = 0; // Just for counting how many pixels have been processed, to report percentage done
@@ -287,7 +287,7 @@ m++;
     percent_done = n * 100 / n_pixels;
     if (percent_done > old_percent_done)
     {
-      printf("\b\b\b\b\b\b\b\b\b\b%4d%% done", percent_done); fflush(stdout);
+      printf("\b\b\b\b\b%4d%%", percent_done); fflush(stdout);
       old_percent_done = percent_done;
     }
 
@@ -353,13 +353,7 @@ m++;
   ////////////////////
 
   char hough_filename[110];
-  char gpi_filename[110];
-  char png_filename[110];
-  char hough_png_filename[110];
   sprintf(hough_filename, "%s.hough.dat", dat_filename);
-  sprintf(gpi_filename, "%s.gpi", dat_filename);
-  sprintf(png_filename, "%s.png", dat_filename);
-  sprintf(hough_png_filename, "%s.hough.png", dat_filename);
 
   // Save Hough to file
   f = fopen(hough_filename, "w");
@@ -376,43 +370,4 @@ m++;
   }
   fclose(f);
 
-  // Write gnuplot script
-  f = fopen(gpi_filename, "w");
-  fprintf(f, "print \"Running gnuplot script...\"\n");
-  fprintf(f, "set terminal pngcairo size 800,600\n\n");
-
-  fprintf(f, "set out '%s'\n", hough_png_filename);
-  fprintf(f, "set xlabel \"'a' parameter\"\n");
-  if (is_dB)
-    fprintf(f, "set ylabel \"Mean dB\"\n");
-  else
-    fprintf(f, "set ylabel \"Mean power\"\n");
-  fprintf(f, "set cblabel \"Thickness of parabola (pixels)\"\n");
-  fprintf(f, "set logscale x\n");
-  fprintf(f, "plot './%s' u 1:3:2 w l palette notitle \n\n", hough_filename);
-
-  fprintf(f, "set out '%s'\n", png_filename);
-  fprintf(f, "unset logscale x\n");
-  fprintf(f, "set dgrid3d\n");
-  fprintf(f, "set samples 10000\n");
-  fprintf(f, "unset xlabel\n");
-  fprintf(f, "unset ylabel\n");
-  fprintf(f, "set xrange [%lf:%lf]\n", min_x, max_x);
-  fprintf(f, "set yrange [%lf:%lf]\n", min_y, max_y);
-  fprintf(f, "set cbrange [%f:%f]\n", -60.0, -38.0);
-  fprintf(f, "set xlabel \"Doppler frequency (mHz)\"\n");
-  fprintf(f, "set ylabel \"Delay (us)\"\n");
-  fprintf(f, "set cblabel \"dB\"\n");
-  fprintf(f, "set parametric\n");
-  fprintf(f, "set dummy t\n");
-  fprintf(f, "set trange [-pi:pi]\n");
-  fprintf(f, "myx(t) = (t+pi)/(2*pi) * %lf + %lf\n", max_x - min_x, min_x);
-  fprintf(f, "myy(t) = (t+pi)/(2*pi) * %lf + %lf\n", max_y - min_y, min_y);
-  fprintf(f, "plot './%s' using (($1-%d)*%f):(($2-%d)*%f):3 with image notitle, \\\n", dat_filename, x_orig, dx, y_orig, dy);
-  fprintf(f, "     myx(t),%lf*(myx(t))**2 w l notitle lc rgb 'white', \\\n", best_a);
-  fprintf(f, "     %lf*sin(t),%lf*cos(t) w l notitle lc rgb 'green', \\\n", mask_ox, mask_oy);
-  fprintf(f, "     myx(t), %lf w l notitle lc rgb 'green', \\\n", mask_y);
-  fprintf(f, "     %lf, myy(t) w l notitle lc rgb 'green', \\\n", -mask_x);
-  fprintf(f, "     %lf, myy(t) w l notitle lc rgb 'green'\n\n", mask_x);
-  fclose(f);
 }
