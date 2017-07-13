@@ -76,9 +76,10 @@ void write_gnuplot_script( FILE *f, struct input_parameters *ip, struct output_p
     fprintf(f, "set trange [-pi:pi]\n");
     fprintf(f, "myx(t) = (t+pi)/(2*pi) * %lf + %lf\n", ip->max_x - ip->min_x, ip->min_x);
     fprintf(f, "myy(t) = (t+pi)/(2*pi) * %lf + %lf\n", ip->max_y - ip->min_y, ip->min_y);
+    fprintf(f, "best_a = %lf\n", op->best_a);
     fprintf(f, "plot './%s' using (($1-%d)*%f):(($2-%d)*%f):3 with image notitle, \\\n",
                 ip->dat_filename, ip->x_orig, ip->dx, ip->y_orig, ip->dy);
-    fprintf(f, "     myx(t),%lf*(myx(t))**2 w l notitle lc rgb 'white', \\\n", op->best_a);
+    fprintf(f, "     myx(t),best_a*(myx(t))**2 w l notitle lc rgb 'white', \\\n");
     fprintf(f, "     %lf*sin(t),%lf*cos(t) w l notitle lc rgb 'green', \\\n", ip->mask_ox, ip->mask_oy);
     fprintf(f, "     myx(t), %lf w l notitle lc rgb 'green', \\\n", ip->mask_y);
     fprintf(f, "     %lf, myy(t) w l notitle lc rgb 'green', \\\n", -ip->mask_x);
