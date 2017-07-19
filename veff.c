@@ -9,6 +9,13 @@
 #define DEG2RAD(x)  ((x)*PI/180.0)
 #define RAD2DEG(x)  ((x)*180.0/PI)
 
+typedef struct vec_t
+{
+    double x;
+    double y;
+    double z;
+} vec;
+
 void usage()
 {
     printf("usage: veff [OPTIONS]\n");
@@ -46,6 +53,13 @@ double get_psrcat_value( char *psr, char *param )
     }
 
     return val;
+}
+
+void calc_vearth(vec *vearth)
+{
+    vearth->x = 0.0;
+    vearth->y = 0.0;
+    vearth->z = 0.0;
 }
 
 int main( int argc, char *argv[] )
