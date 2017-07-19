@@ -1,10 +1,13 @@
-TARGETS = pf bin2asc
+TARGETS = parabfit bin2asc
 LIBS = -lm -lgsl -lgslcblas
 
 all: $(TARGETS)
 
-%: %.c
+parabfit: pf.c
 	gcc -o $@ $< $(LIBS)
+
+bin2asc: bin2asc.c
+	gcc -o $@ $<
 
 clean:
 	-rm $(TARGETS)

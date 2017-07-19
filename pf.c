@@ -27,6 +27,27 @@ struct input_parameters {
     int    is_dB;
 };
 
+// Usage function
+void usage()
+{
+    printf( "usage: parabfit [OPTIONS] DATAFILE\n" );
+    printf( "\n" );
+    printf( "  OPTIONS\n" );
+    printf( "    --xorig=N     The x value (in units matching DATAFILE) corresponding to the origin [default = 0]\n" );
+    printf( "    --yorig=N     The y value (in units matching DATAFILE) corresponding to the origin [default = 0]\n" );
+    printf( "    --dx=N        The resolution of the x axis in mHz [default = 1.0]\n" );
+    printf( "    --dy=N        The resolution of the y axis in us  [default = 1.0]\n" );
+    printf( "    --xmin=N      The minimum x to consider (mHz)  [default = -20.0]\n" );
+    printf( "    --xmax=N      The maximum x to consider (mHz)  [default =  20.0]\n" );
+    printf( "    --ymin=N      The minimum y to consider (us)   [default =   0.0] (values < 0 will default to 0)\n" );
+    printf( "    --ymax=N      The maximum y to consider (us)   [default =  20.0]\n" );
+    printf( "    --omask=N     Data points <= this many pixels from the origin will be masked   [default =  20.0]\n" );
+    printf( "    --xmask=N     Data points <= this many pixels from the x-axis will be masked   [default =  8.0]\n" );
+    printf( "    --ymask=N     Data points <= this many pixels from the y-axis will be masked   [default =  8.0]\n" );
+    printf( "    --tmax=N      The largest parabola thickness to consider (integer) [default = 5]\n");
+    printf( "\n" );
+}
+
 void distparab(double x, double y, double a, double *dx, double *dy)
 {
   x = -fabs(x);
@@ -86,22 +107,17 @@ void write_gnuplot_script( FILE *f, struct input_parameters *ip, struct output_p
     fprintf(f, "     %lf, myy(t) w l notitle lc rgb 'green'\n\n", ip->mask_x);
 }
 
+/********
+ * MAIN *
+ *******/
+
 int main( int argc, char *argv[] )
 {
   // Check if option -h was given
   if (argc == 2 && strcmp(argv[1],"-h") == 0)
   {
-    fprintf(stderr,"usage: %s\n", argv[0]);
-    fprintf(stderr,"  The file 'pf.model' must be present and it must contain the following, each on separate lines, in this order:\n\n");
-    fprintf(stderr,"    inputfile      - the ASCII file containing columns pixelx, pixely, value\n");
-    fprintf(stderr,"    x_orig y_orig  - the x,y values (in units matching the inputfile) corresponding to the origin\n");
-    fprintf(stderr,"    dx dy          - the resolution of the x,y axes in mHz, us\n");
-    fprintf(stderr,"    min_x max_x    - the range of x's to consider (mHz)\n");
-    fprintf(stderr,"    min_y max_y    - the range of y's to consider (us); values < 0 will default to 0\n");
-    fprintf(stderr,"    mask_o mask_x mask_y - data points <= than this many pixels from origin/y_axis/x_axis will be masked\n");
-    fprintf(stderr,"    max_t          - the largest parabola thickness to consider (integer >= 1)\n");
-    fprintf(stderr,"\n");
-    exit(1);
+      usage();
+      exit(EXIT_FAILURE);
   }
 
   // Generic counters
