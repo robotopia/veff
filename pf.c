@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-#include <unistd.h>
+#include <getopt.h>
 #include <gsl/gsl_poly.h>
 
-struct output_parameters {
+typedef struct output_parameters_t {
     char   dat_small_filename[110];
     char   png_filename[110];
     char   hough_filename[110];
@@ -13,9 +13,9 @@ struct output_parameters {
     char   gpi_filename[110];
     int    display_dB;
     double best_a;
-};
+} output_parameters;
 
-struct input_parameters {
+typedef struct input_parameters_t {
     char   dat_filename[100];
     int    x_orig, y_orig;
     double dx;
@@ -26,7 +26,7 @@ struct input_parameters {
     double mask_ox, mask_oy;
     int    max_t;
     int    is_dB;
-};
+} input_parameters;
 
 // Usage function
 void usage()
@@ -34,6 +34,8 @@ void usage()
     printf( "usage: parabfit [OPTIONS] DATAFILE\n" );
     printf( "\n" );
     printf( "  OPTIONS\n" );
+    printf( "    --ssdata=PATH The file containing the secondary spectrum data. Should be a text file with three\n" );
+    printf( "                  columns of number: \"xpixel ypixel value [default = ss.out]\"\n" );
     printf( "    --xorig=N     The x value (in units matching DATAFILE) corresponding to the origin [default = 0]\n" );
     printf( "    --yorig=N     The y value (in units matching DATAFILE) corresponding to the origin [default = 0]\n" );
     printf( "    --dx=N        The resolution of the x axis in mHz [default = 1.0]\n" );
@@ -67,7 +69,7 @@ void distparab(double x, double y, double a, double *dx, double *dy)
   *dy = yp - y;
 }
 
-void write_gnuplot_script( FILE *f, struct input_parameters *ip, struct output_parameters *op )
+void write_gnuplot_script( FILE *f, input_parameters *ip, output_parameters *op )
 {
     // Write gnuplot script
     fprintf(f, "print \"Running gnuplot script...\"\n");
@@ -127,8 +129,8 @@ int main( int argc, char *argv[] )
     int i,j;
 
     // Get values from input file
-    struct input_parameters ip;
-    struct output_parameters op;
+    input_parameters ip;
+    output_parameters op;
 
     // Set defaults for input parameters
     sprintf(ip.dat_filename, "ss.out");
@@ -149,33 +151,90 @@ int main( int argc, char *argv[] )
     // Parse options
 
     int c;
-    while (1) {
+    while (1)
+    {
 
         static struct option long_options[] = {
-            {"dx",      optional_argument, &(ip.dx), NULL},
-            {"help",    optional_argument, 0,        'h'},
+            {"ssdata",  required_argument, NULL, 's'},
+            {"xorig",   required_argument, NULL, 'o'},
+            {"yorig",   required_argument, NULL, 'O'},
+            {"dx",      required_argument, NULL, 'd'},
+            {"dy",      required_argument, NULL, 'D'},
+            {"xmin",    required_argument, NULL, 'x'},
+            {"xmax",    required_argument, NULL, 'X'},
+            {"ymin",    required_argument, NULL, 'y'},
+            {"ymax",    required_argument, NULL, 'Y'},
+            {"omask",   required_argument, NULL, 'k'},
+            {"xmask",   required_argument, NULL, 'm'},
+            {"ymask",   required_argument, NULL, 'M'},
+            {"tmax",    required_argument, NULL, 'T'},
+            {"dB",      no_argument,       NULL, 'L'},
+            {"help",    no_argument,       NULL, 'h'},
+            {0, 0, 0, 0}
         };
+
+        int option_index = 0;
+
+        c = getopt_long(argc, argv, "d:D:hk:Lm:M:o:O:s:T:x:X:y:Y:", long_options, &option_index);
+
+        if (c == -1)
+            break;
+
+        switch (c)
+        {
+            case 'd':
+                ip.dx = atof(optarg);
+                break;
+            case 'D':
+                ip.dy = atof(optarg);
+                break;
+            case 'h':
+                usage();
+                exit(0);
+                break;
+            case 'k':
+                ip.mask_o = atof(optarg);
+                break;
+            case 'L':
+                ip.is_dB = 1;
+                break;
+            case 'm':
+                ip.mask_x = atof(optarg);
+                break;
+            case 'M':
+                ip.mask_y = atof(optarg);
+                break;
+            case 'o':
+                ip.x_orig = atof(optarg);
+                break;
+            case 'O':
+                ip.y_orig = atof(optarg);
+                break;
+            case 's':
+                sprintf(ip.dat_filename, optarg);
+            case 'T':
+                ip.max_t = atof(optarg);
+                break;
+            case 'x':
+                ip.min_x = atof(optarg);
+                break;
+            case 'X':
+                ip.max_x = atof(optarg);
+                break;
+            case 'y':
+                ip.min_y = atof(optarg);
+                break;
+            case 'Y':
+                ip.max_y = atof(optarg);
+                break;
+            case '?':
+                break;
+            default:
+                fprintf(stderr, "error: unrecognised option\n");
+                exit(EXIT_FAILURE);
+                break;
+        }
     }
-
-    const char *model_filename = "pf.model";
-    FILE *f = fopen(model_filename, "r");
-    if (!f)
-    {
-        fprintf(stderr,"error: Could not open file '%s'\n", model_filename);
-        exit(1);
-    }
-
-    fscanf(f, "%s", ip.dat_filename);
-    fscanf(f, "%d %d", &ip.x_orig, &ip.y_orig);
-    fscanf(f, "%lf %lf", &ip.dx, &ip.dy);
-    fscanf(f, "%lf %lf", &ip.min_x, &ip.max_x);
-    fscanf(f, "%lf %lf", &ip.min_y, &ip.max_y);
-    fscanf(f, "%lf %lf %lf", &ip.mask_o, &ip.mask_x, &ip.mask_y);
-    fscanf(f, "%d", &ip.max_t);
-
-    fclose(f);
-
-    ip.is_dB = 0; // indicates power values are log (dB) values
 
     // Check: min_y >= 0
     if (ip.min_y < 0.0)  ip.min_y = 0.0;
@@ -372,7 +431,7 @@ int main( int argc, char *argv[] )
         }
 
     // Load the reduced file
-    f = fopen(op.dat_small_filename, "r");
+    FILE *f = fopen(op.dat_small_filename, "r");
     if (!f)
     {
         fprintf(stderr,"error: Could not open file '%s'\n", op.dat_small_filename);
