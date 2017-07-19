@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <unistd.h>
 #include <gsl/gsl_poly.h>
 
 struct output_parameters {
@@ -44,7 +45,9 @@ void usage()
     printf( "    --omask=N     Data points <= this many pixels from the origin will be masked   [default =  20.0]\n" );
     printf( "    --xmask=N     Data points <= this many pixels from the x-axis will be masked   [default =  8.0]\n" );
     printf( "    --ymask=N     Data points <= this many pixels from the y-axis will be masked   [default =  8.0]\n" );
-    printf( "    --tmax=N      The largest parabola thickness to consider (integer) [default = 5]\n");
+    printf( "    --tmax=N      The largest parabola thickness to consider (integer) [default = 5]\n" );
+    printf( "    --dB          Input values are in dB units [default = off]\n" );
+    printf( "    -h, --help    Display this help and exit\n" );
     printf( "\n" );
 }
 
@@ -113,342 +116,369 @@ void write_gnuplot_script( FILE *f, struct input_parameters *ip, struct output_p
 
 int main( int argc, char *argv[] )
 {
-  // Check if option -h was given
-  if (argc == 2 && strcmp(argv[1],"-h") == 0)
-  {
-      usage();
-      exit(EXIT_FAILURE);
-  }
-
-  // Generic counters
-  int i,j;
-
-  // Get values from input file
-  struct input_parameters ip;
-  struct output_parameters op;
-
-  const char *model_filename = "pf.model";
-  FILE *f = fopen(model_filename, "r");
-  if (!f)
-  {
-    fprintf(stderr,"error: Could not open file '%s'\n", model_filename);
-    exit(1);
-  }
-
-  fscanf(f, "%s", ip.dat_filename);
-  fscanf(f, "%d %d", &ip.x_orig, &ip.y_orig);
-  fscanf(f, "%lf %lf", &ip.dx, &ip.dy);
-  fscanf(f, "%lf %lf", &ip.min_x, &ip.max_x);
-  fscanf(f, "%lf %lf", &ip.min_y, &ip.max_y);
-  fscanf(f, "%lf %lf %lf", &ip.mask_o, &ip.mask_x, &ip.mask_y);
-  fscanf(f, "%d", &ip.max_t);
-
-  fclose(f);
-
-  ip.is_dB = 0; // indicates power values are log (dB) values
-
-  // Check: min_y >= 0
-  if (ip.min_y < 0.0)  ip.min_y = 0.0;
-
-  // Check that max's are more than min's
-  if ((ip.max_x < ip.min_x) || (ip.max_y < ip.min_y))
-  {
-    fprintf(stderr,"error: minimum values cannot be greater than maximum values\n");
-    exit(1);
-  }
-
-  // Convert mask_o to an ellipse with correct units
-  ip.mask_ox = ip.mask_o * ip.dx;
-  ip.mask_oy = ip.mask_o * ip.dy;
-
-  // Round mask to pixel boundary
-  ip.mask_x = floor(ip.mask_x) + 0.5;
-  ip.mask_y = floor(ip.mask_y) + 0.5;
-
-  // First, write out file containing only those data to be considered
-  // Open the original file for reading (fr), and a file for writing (fw)
-  sprintf(op.dat_small_filename, "%s.small", ip.dat_filename);
-  FILE *fr = fopen(ip.dat_filename, "r");
-  if (!fr)
-  {
-    fprintf(stderr,"error: Could not open file '%s'\n", ip.dat_filename);
-    exit(EXIT_FAILURE);
-  }
-  FILE *fw = fopen(op.dat_small_filename, "w");
-  if (!fw)
-  {
-    fprintf(stderr,"error: Could not open file '%s'\n", op.dat_small_filename);
-    exit(EXIT_FAILURE);
-  }
-
-  // Fields are x,y,val
-  double x, y;
-  double temp_max_x, temp_min_x;
-  double temp_max_y, temp_min_y;
-  double val;
-  int is_first_time = 1;
-  int n_pixels = 0;
-
-  while (!feof(fr))
-  {
-    // Read in values
-    fscanf(fr, "%lf %lf %lf", &x, &y, &val);
-
-    // Convert pixel numbers to correct units
-    x = (x - (double)ip.x_orig) * ip.dx;
-    y = (y - (double)ip.y_orig) * ip.dy;
-
-    if (is_first_time)
+    // Check if option -h was given
+    if (argc == 2 && strcmp(argv[1],"-h") == 0)
     {
-      temp_max_x = temp_min_x = x;
-      temp_max_y = temp_min_y = x;
-      is_first_time = 0;
+        usage();
+        exit(EXIT_FAILURE);
     }
 
-    // Keep track of the max and min values of x and y read in so far
-    if (x > temp_max_x)  temp_max_x = x;
-    if (x < temp_min_x)  temp_min_x = x;
-    if (y > temp_max_y)  temp_max_y = y;
-    if (y < temp_min_y)  temp_min_y = y;
+    // Generic counters
+    int i,j;
 
-    // If values are within range, write out to "reduced" file
-    if ((x >= ip.min_x) && (x <= ip.max_x) &&
-        (y >= ip.min_y) && (y <= ip.max_y))
-    {
-      fprintf(fw, "%lf %lf %le\n", x, y, val);
-      n_pixels++;
-    }
-  }
+    // Get values from input file
+    struct input_parameters ip;
+    struct output_parameters op;
 
-  // Close files
-  fclose(fr);
-  fclose(fw);
+    // Set defaults for input parameters
+    sprintf(ip.dat_filename, "ss.out");
+    ip.x_orig = 0;
+    ip.y_orig = 0;
+    ip.dx = 1.0;
+    ip.dy = 1.0;
+    ip.min_x = -20.0;
+    ip.max_x = -20.0;
+    ip.min_y = 0.0;
+    ip.max_y = 20.0;
+    ip.mask_o = 20.0;
+    ip.mask_x = 8.0;
+    ip.mask_y = 8.0;
+    ip.max_t = 5;
+    ip.is_dB = 0;
 
-  // If specified x and y limits are outside of actual data, trim them to fit actual data
-  if (ip.max_x > temp_max_x)  ip.max_x = temp_max_x;
-  if (ip.min_x < temp_min_x)  ip.min_x = temp_min_x;
-  if (ip.max_y > temp_max_y)  ip.max_y = temp_max_y;
-  if (ip.min_y < temp_min_y)  ip.min_y = temp_min_y;
+    // Parse options
 
-  // Check that mask values are all positive
-  if ((ip.mask_o < 0.0) || (ip.mask_x < 0.0) || (ip.mask_y < 0.0))
-  {
-    fprintf(stderr, "error: mask values must be > 0\n");
-    exit(EXIT_FAILURE);
-  }
+    int c;
+    while (1) {
 
-  // Check that max_t is >= 1
-  if (ip.max_t < 1)
-  {
-    fprintf(stderr, "error: max_t value must be >= 1\n");
-    exit(EXIT_FAILURE);
-  }
-
-  // Convert mask_x and mask_y to correct units;
-  ip.mask_x *= ip.dx;
-  ip.mask_y *= ip.dy;
-
-  // Find the minimum and maximum unmasked pixels in both x and y directions
-  double inner_x, outer_x;
-  double inner_y, outer_y;
-
-  // For the x's...
-  if (ip.min_x > 0)
-  {
-    inner_x = (ip.min_x > ip.mask_x ? ip.min_x : ip.mask_x);
-    outer_x = ip.max_x;
-  }
-  else if (ip.max_x < 0)
-  {
-    inner_x = (fabs(ip.max_x) > ip.mask_x ? fabs(ip.max_x) : ip.mask_x);
-    outer_x = fabs(ip.min_x);
-  }
-  else
-  {
-    inner_x = ip.mask_x;
-    outer_x = fabs(ip.min_x) > ip.max_x ? fabs(ip.min_x) : ip.max_x;
-  }
-
-  // ...and for the y's
-  if (ip.min_y > 0)
-  {
-    inner_y = (ip.min_y > ip.mask_y ? ip.min_y : ip.mask_y);
-    outer_y = ip.max_y;
-  }
-  else if (ip.max_y < 0)
-  {
-    inner_y = (fabs(ip.max_y) > ip.mask_y ? fabs(ip.max_y) : ip.mask_y);
-    outer_y = fabs(ip.min_y);
-  }
-  else
-  {
-    inner_y = ip.mask_y;
-    outer_y = fabs(ip.min_y) > ip.max_y ? fabs(ip.min_y) : ip.max_y;
-  }
-
-  // Add a fudge factor, to avoid parabolas with only a minimal number of pixels
-  inner_y *= 2.0;
-  inner_x *= sqrt(2.0);
-
-  // Set up array of trial 'a' values
-  double step_x = ip.dx / 10.0;
-  double step_y = ip.dy / 10.0;
-  int n_as_x = (int)((outer_x - inner_x) / step_x) + 1;
-  int n_as_y = (int)((outer_y - inner_y) / step_y) + 1;
-  int n_as = n_as_x + n_as_y + 2; // +2 just a safety buffer in case something goes wrong with the int casting above
-  int n = 0;
-  double trial_as[n_as];
-  for (y = inner_y; y <= outer_y; y += step_y) // Run up pixels bordering on right
-  {
-    trial_as[n] = y / (outer_x*outer_x);
-    n++;
-  }
-
-  for (x = outer_x; x >= inner_x; x -= step_x)
-  {
-    trial_as[n] = outer_y / (x*x);
-    n++;
-    if (n > n_as)
-    {
-      fprintf(stderr, "error: more trial 'a's written (%d) than space allocated (%d), ", n, n_as);
-      fprintf(stderr, "inner_x = %f, x = %f, step_x = %f\n", inner_x, x, step_x);
-      exit(EXIT_FAILURE);
-    }
-  }
-
-  // Set up array of trial 't' (thickness) values
-  int n_ts = ip.max_t;
-  double trial_ts[n_ts];
-  for (i = 0; i < n_ts; i++)
-    trial_ts[i] = (double)(i+1);
-
-  // Create the "Hough" transform with parameters "a" and "t"
-  double a, t; // 'a' parameter & thickness 't'
-
-  double parab_dist_x; // Shortest distance from point to parabola (x component)
-  double parab_dist_y; // Shortest distance from point to parabola (y component)
-  double dist_pixels; // The same distance as above in pixel units
-  double orig_dist; // Distance from pixel to origin
-  int pixelcount[n_as][n_ts]; // Count how many pixels are in this sum
-  double hough[n_as][n_ts]; // The actual result of the transform
-  int old_percent_done = 0, percent_done = 0;
-
-  // Initialse hough and pixelcount to zero
-  for (i = 0; i < n_as; i++)
-  for (j = 0; j < n_ts; j++)
-  {
-    hough[i][j] = 0.0;
-    pixelcount[i][j] = 0;
-  }
-
-  // Load the reduced file
-  f = fopen(op.dat_small_filename, "r");
-  if (!f)
-  {
-    fprintf(stderr,"error: Could not open file '%s'\n", op.dat_small_filename);
-    exit(EXIT_FAILURE);
-  }
-
-  printf("Calculating Hough transform..."); fflush(stdout);
-  printf("%4d%%", percent_done);       fflush(stdout);
-
-  // Go through the data and sum up the eligible points
-  n = 0; // Just for counting how many pixels have been processed, to report percentage done
-  while (!feof(f))
-  {
-    // Output percentage done
-    n++;
-    percent_done = n * 100 / n_pixels;
-    if (percent_done > old_percent_done)
-    {
-      printf("\b\b\b\b\b%4d%%", percent_done); fflush(stdout);
-      old_percent_done = percent_done;
+        static struct option long_options[] = {
+            {"dx",      optional_argument, &(ip.dx), NULL},
+            {"help",    optional_argument, 0,        'h'},
+        };
     }
 
-    // Get next lot of values
-    fscanf(f, "%lf %lf %lf\n", &x, &y, &val);
-
-    // Convert values to real, not-log powers, if necessary
-    if (ip.is_dB)  val = pow(10.0,val/10.0);
-
-    if (fabs(x) <= ip.mask_x) // don't count pixels too close to y-axis
-      continue;
-
-    if (fabs(y) <= ip.mask_y) // don't count pixels too close to x-axis
-      continue;
-
-    orig_dist = hypot(x/ip.mask_ox, y/ip.mask_oy);
-    if (orig_dist <= 1) // don't count pixels too close to origin
-      continue;
-
-    for (i = 0; i < n_as; i++)
+    const char *model_filename = "pf.model";
+    FILE *f = fopen(model_filename, "r");
+    if (!f)
     {
-      a = trial_as[i];
+        fprintf(stderr,"error: Could not open file '%s'\n", model_filename);
+        exit(1);
+    }
 
-      distparab(x, y, a, &parab_dist_x, &parab_dist_y); // Calculate distance away from parabola
-      dist_pixels = hypot(parab_dist_x/ip.dx, parab_dist_y/ip.dy);
+    fscanf(f, "%s", ip.dat_filename);
+    fscanf(f, "%d %d", &ip.x_orig, &ip.y_orig);
+    fscanf(f, "%lf %lf", &ip.dx, &ip.dy);
+    fscanf(f, "%lf %lf", &ip.min_x, &ip.max_x);
+    fscanf(f, "%lf %lf", &ip.min_y, &ip.max_y);
+    fscanf(f, "%lf %lf %lf", &ip.mask_o, &ip.mask_x, &ip.mask_y);
+    fscanf(f, "%d", &ip.max_t);
 
-      for (j = 0; j < ip.max_t; j++)
-      {
-        t = trial_ts[j];
+    fclose(f);
 
-        if (dist_pixels <= t && x < 0.0)
+    ip.is_dB = 0; // indicates power values are log (dB) values
+
+    // Check: min_y >= 0
+    if (ip.min_y < 0.0)  ip.min_y = 0.0;
+
+    // Check that max's are more than min's
+    if ((ip.max_x < ip.min_x) || (ip.max_y < ip.min_y))
+    {
+        fprintf(stderr,"error: minimum values cannot be greater than maximum values\n");
+        exit(1);
+    }
+
+    // Convert mask_o to an ellipse with correct units
+    ip.mask_ox = ip.mask_o * ip.dx;
+    ip.mask_oy = ip.mask_o * ip.dy;
+
+    // Round mask to pixel boundary
+    ip.mask_x = floor(ip.mask_x) + 0.5;
+    ip.mask_y = floor(ip.mask_y) + 0.5;
+
+    // First, write out file containing only those data to be considered
+    // Open the original file for reading (fr), and a file for writing (fw)
+    sprintf(op.dat_small_filename, "%s.small", ip.dat_filename);
+    FILE *fr = fopen(ip.dat_filename, "r");
+    if (!fr)
+    {
+        fprintf(stderr,"error: Could not open file '%s'\n", ip.dat_filename);
+        exit(EXIT_FAILURE);
+    }
+    FILE *fw = fopen(op.dat_small_filename, "w");
+    if (!fw)
+    {
+        fprintf(stderr,"error: Could not open file '%s'\n", op.dat_small_filename);
+        exit(EXIT_FAILURE);
+    }
+
+    // Fields are x,y,val
+    double x, y;
+    double temp_max_x, temp_min_x;
+    double temp_max_y, temp_min_y;
+    double val;
+    int is_first_time = 1;
+    int n_pixels = 0;
+
+    while (!feof(fr))
+    {
+        // Read in values
+        fscanf(fr, "%lf %lf %lf", &x, &y, &val);
+
+        // Convert pixel numbers to correct units
+        x = (x - (double)ip.x_orig) * ip.dx;
+        y = (y - (double)ip.y_orig) * ip.dy;
+
+        if (is_first_time)
         {
-          pixelcount[i][j]++;
-          hough[i][j] += val;
+            temp_max_x = temp_min_x = x;
+            temp_max_y = temp_min_y = x;
+            is_first_time = 0;
         }
-      } // end for thickness 't'
-    } // end for parameter 'a'
-  }
 
-  fclose(f);
+        // Keep track of the max and min values of x and y read in so far
+        if (x > temp_max_x)  temp_max_x = x;
+        if (x < temp_min_x)  temp_min_x = x;
+        if (y > temp_max_y)  temp_max_y = y;
+        if (y < temp_min_y)  temp_min_y = y;
 
-  // Just print a new line
-  printf("\n");
-
-  // Use the mean value rather than the sum (i.e. normalise w.r.t number of pixels summed)
-  printf("Finding best 'a' parameter... \n");
-  op.best_a = trial_as[0];     // Initialise best 'a' parameter to the first trial 'a'
-  double best_hough = hough[0][0] / (double)pixelcount[0][0]; // Initialise best hough value to the first hough value
-  for (i = 0; i < n_as; i++)
-  for (j = 0; j < n_ts; j++)
-  {
-    hough[i][j] = hough[i][j] / (double)pixelcount[i][j];
-    if (hough[i][j] > best_hough)
-    {
-      best_hough = hough[i][j];
-      op.best_a  = trial_as[i];
+        // If values are within range, write out to "reduced" file
+        if ((x >= ip.min_x) && (x <= ip.max_x) &&
+                (y >= ip.min_y) && (y <= ip.max_y))
+        {
+            fprintf(fw, "%lf %lf %le\n", x, y, val);
+            n_pixels++;
+        }
     }
-  }
-  printf("  Found a = %f\n", op.best_a);
 
-  ////////////////////
-  // OUTPUT RESULTS //
-  ////////////////////
+    // Close files
+    fclose(fr);
+    fclose(fw);
 
-  sprintf(op.png_filename,       "%s.png",       ip.dat_filename);
-  sprintf(op.hough_filename,     "%s.hough.dat", ip.dat_filename);
-  sprintf(op.hough_png_filename, "%s.hough.png", ip.dat_filename);
-  sprintf(op.gpi_filename,       "%s.gpi",       ip.dat_filename);
+    // If specified x and y limits are outside of actual data, trim them to fit actual data
+    if (ip.max_x > temp_max_x)  ip.max_x = temp_max_x;
+    if (ip.min_x < temp_min_x)  ip.min_x = temp_min_x;
+    if (ip.max_y > temp_max_y)  ip.max_y = temp_max_y;
+    if (ip.min_y < temp_min_y)  ip.min_y = temp_min_y;
 
-  // Save Hough to file
-  f = fopen(op.hough_filename, "w");
-  printf("Writing hough file...\n");
-  for (j = 0; j < n_ts; j++)
-  for (i = 0; i < n_as; i++) // reverse order to make plots look right
-  {
-    if (i == 0)
-      fprintf(f,"\n");
-    if (ip.is_dB)
-      hough[i][j] = 10.0*log10(hough[i][j]);
-    if (!isnan(hough[i][j]))
-      fprintf(f, "%e %f %e %d\n", trial_as[i], trial_ts[j], hough[i][j], pixelcount[i][j]);
-  }
-  fclose(f);
+    // Check that mask values are all positive
+    if ((ip.mask_o < 0.0) || (ip.mask_x < 0.0) || (ip.mask_y < 0.0))
+    {
+        fprintf(stderr, "error: mask values must be > 0\n");
+        exit(EXIT_FAILURE);
+    }
 
-  // Write out gnuplot script
-  f = fopen(op.gpi_filename, "w");
-  printf("Writing gnuplot script...\n");
-  write_gnuplot_script(f, &ip, &op);
-  fclose(f);
+    // Check that max_t is >= 1
+    if (ip.max_t < 1)
+    {
+        fprintf(stderr, "error: max_t value must be >= 1\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Convert mask_x and mask_y to correct units;
+    ip.mask_x *= ip.dx;
+    ip.mask_y *= ip.dy;
+
+    // Find the minimum and maximum unmasked pixels in both x and y directions
+    double inner_x, outer_x;
+    double inner_y, outer_y;
+
+    // For the x's...
+    if (ip.min_x > 0)
+    {
+        inner_x = (ip.min_x > ip.mask_x ? ip.min_x : ip.mask_x);
+        outer_x = ip.max_x;
+    }
+    else if (ip.max_x < 0)
+    {
+        inner_x = (fabs(ip.max_x) > ip.mask_x ? fabs(ip.max_x) : ip.mask_x);
+        outer_x = fabs(ip.min_x);
+    }
+    else
+    {
+        inner_x = ip.mask_x;
+        outer_x = fabs(ip.min_x) > ip.max_x ? fabs(ip.min_x) : ip.max_x;
+    }
+
+    // ...and for the y's
+    if (ip.min_y > 0)
+    {
+        inner_y = (ip.min_y > ip.mask_y ? ip.min_y : ip.mask_y);
+        outer_y = ip.max_y;
+    }
+    else if (ip.max_y < 0)
+    {
+        inner_y = (fabs(ip.max_y) > ip.mask_y ? fabs(ip.max_y) : ip.mask_y);
+        outer_y = fabs(ip.min_y);
+    }
+    else
+    {
+        inner_y = ip.mask_y;
+        outer_y = fabs(ip.min_y) > ip.max_y ? fabs(ip.min_y) : ip.max_y;
+    }
+
+    // Add a fudge factor, to avoid parabolas with only a minimal number of pixels
+    inner_y *= 2.0;
+    inner_x *= sqrt(2.0);
+
+    // Set up array of trial 'a' values
+    double step_x = ip.dx / 10.0;
+    double step_y = ip.dy / 10.0;
+    int n_as_x = (int)((outer_x - inner_x) / step_x) + 1;
+    int n_as_y = (int)((outer_y - inner_y) / step_y) + 1;
+    int n_as = n_as_x + n_as_y + 2; // +2 just a safety buffer in case something goes wrong with the int casting above
+    int n = 0;
+    double trial_as[n_as];
+    for (y = inner_y; y <= outer_y; y += step_y) // Run up pixels bordering on right
+    {
+        trial_as[n] = y / (outer_x*outer_x);
+        n++;
+    }
+
+    for (x = outer_x; x >= inner_x; x -= step_x)
+    {
+        trial_as[n] = outer_y / (x*x);
+        n++;
+        if (n > n_as)
+        {
+            fprintf(stderr, "error: more trial 'a's written (%d) than space allocated (%d), ", n, n_as);
+            fprintf(stderr, "inner_x = %f, x = %f, step_x = %f\n", inner_x, x, step_x);
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    // Set up array of trial 't' (thickness) values
+    int n_ts = ip.max_t;
+    double trial_ts[n_ts];
+    for (i = 0; i < n_ts; i++)
+        trial_ts[i] = (double)(i+1);
+
+    // Create the "Hough" transform with parameters "a" and "t"
+    double a, t; // 'a' parameter & thickness 't'
+
+    double parab_dist_x; // Shortest distance from point to parabola (x component)
+    double parab_dist_y; // Shortest distance from point to parabola (y component)
+    double dist_pixels; // The same distance as above in pixel units
+    double orig_dist; // Distance from pixel to origin
+    int pixelcount[n_as][n_ts]; // Count how many pixels are in this sum
+    double hough[n_as][n_ts]; // The actual result of the transform
+    int old_percent_done = 0, percent_done = 0;
+
+    // Initialse hough and pixelcount to zero
+    for (i = 0; i < n_as; i++)
+        for (j = 0; j < n_ts; j++)
+        {
+            hough[i][j] = 0.0;
+            pixelcount[i][j] = 0;
+        }
+
+    // Load the reduced file
+    f = fopen(op.dat_small_filename, "r");
+    if (!f)
+    {
+        fprintf(stderr,"error: Could not open file '%s'\n", op.dat_small_filename);
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Calculating Hough transform..."); fflush(stdout);
+    printf("%4d%%", percent_done);       fflush(stdout);
+
+    // Go through the data and sum up the eligible points
+    n = 0; // Just for counting how many pixels have been processed, to report percentage done
+    while (!feof(f))
+    {
+        // Output percentage done
+        n++;
+        percent_done = n * 100 / n_pixels;
+        if (percent_done > old_percent_done)
+        {
+            printf("\b\b\b\b\b%4d%%", percent_done); fflush(stdout);
+            old_percent_done = percent_done;
+        }
+
+        // Get next lot of values
+        fscanf(f, "%lf %lf %lf\n", &x, &y, &val);
+
+        // Convert values to real, not-log powers, if necessary
+        if (ip.is_dB)  val = pow(10.0,val/10.0);
+
+        if (fabs(x) <= ip.mask_x) // don't count pixels too close to y-axis
+            continue;
+
+        if (fabs(y) <= ip.mask_y) // don't count pixels too close to x-axis
+            continue;
+
+        orig_dist = hypot(x/ip.mask_ox, y/ip.mask_oy);
+        if (orig_dist <= 1) // don't count pixels too close to origin
+            continue;
+
+        for (i = 0; i < n_as; i++)
+        {
+            a = trial_as[i];
+
+            distparab(x, y, a, &parab_dist_x, &parab_dist_y); // Calculate distance away from parabola
+            dist_pixels = hypot(parab_dist_x/ip.dx, parab_dist_y/ip.dy);
+
+            for (j = 0; j < ip.max_t; j++)
+            {
+                t = trial_ts[j];
+
+                if (dist_pixels <= t && x < 0.0)
+                {
+                    pixelcount[i][j]++;
+                    hough[i][j] += val;
+                }
+            } // end for thickness 't'
+        } // end for parameter 'a'
+    }
+
+    fclose(f);
+
+    // Just print a new line
+    printf("\n");
+
+    // Use the mean value rather than the sum (i.e. normalise w.r.t number of pixels summed)
+    printf("Finding best 'a' parameter... \n");
+    op.best_a = trial_as[0];     // Initialise best 'a' parameter to the first trial 'a'
+    double best_hough = hough[0][0] / (double)pixelcount[0][0]; // Initialise best hough value to the first hough value
+    for (i = 0; i < n_as; i++)
+        for (j = 0; j < n_ts; j++)
+        {
+            hough[i][j] = hough[i][j] / (double)pixelcount[i][j];
+            if (hough[i][j] > best_hough)
+            {
+                best_hough = hough[i][j];
+                op.best_a  = trial_as[i];
+            }
+        }
+    printf("  Found a = %f\n", op.best_a);
+
+    ////////////////////
+    // OUTPUT RESULTS //
+    ////////////////////
+
+    sprintf(op.png_filename,       "%s.png",       ip.dat_filename);
+    sprintf(op.hough_filename,     "%s.hough.dat", ip.dat_filename);
+    sprintf(op.hough_png_filename, "%s.hough.png", ip.dat_filename);
+    sprintf(op.gpi_filename,       "%s.gpi",       ip.dat_filename);
+
+    // Save Hough to file
+    f = fopen(op.hough_filename, "w");
+    printf("Writing hough file...\n");
+    for (j = 0; j < n_ts; j++)
+        for (i = 0; i < n_as; i++) // reverse order to make plots look right
+        {
+            if (i == 0)
+                fprintf(f,"\n");
+            if (ip.is_dB)
+                hough[i][j] = 10.0*log10(hough[i][j]);
+            if (!isnan(hough[i][j]))
+                fprintf(f, "%e %f %e %d\n", trial_as[i], trial_ts[j], hough[i][j], pixelcount[i][j]);
+        }
+    fclose(f);
+
+    // Write out gnuplot script
+    f = fopen(op.gpi_filename, "w");
+    printf("Writing gnuplot script...\n");
+    write_gnuplot_script(f, &ip, &op);
+    fclose(f);
 }
