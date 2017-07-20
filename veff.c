@@ -30,16 +30,63 @@ void usage()
     printf("\n");
 }
 
+double dot( vec *v1, vec *v2 )
+{
+    return v1->x * v2->x +
+           v1->y * v2->y +
+           v1->z * v2->z;
+}
+
+void scale( vec *vin, double factor, vec *vout )
+{
+    // Multiply vector vin by a scalar factor
+    vout->x = vin->x * factor;
+    vout->y = vin->y * factor;
+    vout->z = vin->z * factor;
+}
+
+double magnitude( vec *v )
+{
+    return sqrt(dot(v, v));
+}
+
 void normalise( vec *vin, vec *vout )
 {
     // Normalise the vector length
-    double mag = sqrt(vin->x * vin->x +
-                      vin->y * vin->y +
-                      vin->z * vin->z);
+    double mag = magnitude( vin );
+    scale( vin, 1.0/mag, vout );
+}
 
-    vout->x = vin->x / mag;
-    vout->y = vin->y / mag;
-    vout->z = vin->z / mag;
+void cross( vec *v1, vec *v2, vec *vout )
+{
+    // Calculate the cross product of two vectors
+    vout->x = (v1->y * v2->z) - (v1->z * v2->y);
+    vout->y = (v1->z * v2->x) - (v1->x * v2->z);
+    vout->z = (v1->x * v2->y) - (v1->y * v2->x);
+}
+
+void cross_norm( vec *v1, vec *v2, vec *vout )
+{
+    // Calculate the normalised cross product of two vectors
+    cross( v1, v2, vout );
+    normalise( vout, vout );
+}
+
+double proj_length( vec *v1, vec *v2 )
+{
+    // Calculate the projected length of v1 onto v2
+    vec vtmp;
+    normalise( v2, &vtmp );   // normalise v2 = "v2n"
+    return dot( v1, &vtmp );  // calculate (v1 dot v2n)
+}
+
+void projection( vec *v1, vec *v2, vec *vout )
+{
+    // Calculate the projection of v1 onto v2.
+    // The result, vout, will be parallel to v2.
+    normalise( v2, vout );          // normalise v2 = "v2n"
+    double len = dot( v1, vout );   // calculate (v1 dot v2n)
+    scale( vout, len, vout );       // calculate (v1 dot v2n) times v2n
 }
 
 double get_psrcat_value( char *psr, char *param )
@@ -68,13 +115,6 @@ double get_psrcat_value( char *psr, char *param )
     }
 
     return val;
-}
-
-void calc_vearth(vec *vearth)
-{
-    vearth->x = 0.0;
-    vearth->y = 0.0;
-    vearth->z = 0.0;
 }
 
 int main( int argc, char *argv[] )
@@ -169,9 +209,12 @@ int main( int argc, char *argv[] )
     // Print out position and velocity of Earth
     if (verbose)
     {
-        printf("\nEarth pos:\n  [%f, %f, %f]\n", state[0], state[1], state[2]);
-        printf("Earth vel:\n  [%f, %f, %f]\n", v_earth.x, v_earth.y, v_earth.z );
-        printf("Earth vel (normalised):\n  [%f, %f, %f]\n", vn_earth.x, vn_earth.y, vn_earth.z );
+        double v_earth_mag = magnitude( &v_earth );
+
+        printf("\nEarth pos (km):\n  [%lf, %lf, %lf]\n", state[0], state[1], state[2]);
+        printf("Earth vel (km/s):\n  [%lf, %lf, %lf]\n", v_earth.x, v_earth.y, v_earth.z );
+        printf("  Total: %lf km/s\n", v_earth_mag );
+        printf("Earth vel (normalised):\n  [%lf, %lf, %lf]\n", vn_earth.x, vn_earth.y, vn_earth.z );
     }
 
     // Collect the needed values from psrcat
@@ -220,6 +263,40 @@ int main( int argc, char *argv[] )
         printf("  decjr = %.12f rad\n", decjr);
     }
 
+    // Set "up" and target reference frame (unit) vectors.
+    // "up" = z-axis in J2000 frame
+    // I = in direction of positive RA,  in the plane of the sky
+    // J = in direction of positive Dec, in the plane of the sky
+    // K = the line of sight towards the pulsar (orthogonal to X and Y)
+    vec up;
+    vec I, J, K;
+
+    up.x = 0.0;
+    up.y = 0.0;
+    up.z = 1.0;
+
+    // Calculate K
+    K.x = cos(decjr) * cos(rajr);
+    K.y = cos(decjr) * sin(rajr);
+    K.z = sin(decjr);
+
+    cross_norm( &up, &K, &I ); // Calculate I
+    cross( &K, &I, &J );       // Calculate J
+
+    // Get the Earth's velocity projected onto I and J (i.e. the plane of the sky)
+    double vI = proj_length( &v_earth, &I );
+    double vJ = proj_length( &v_earth, &J );
+
+    // Rotate to line up with the pulsar orbit's line of nodes
+    double skomr = sin(komr);
+    double ckomr = cos(komr);
+    double vx = ckomr*vI + skomr*vJ;
+    double vy = skomr*vI - ckomr*vJ;
+
+    printf( "\nVelocity of the Earth in 'x,y' coordinates:\n" );
+    printf( "  [%lf, %lf]\n", vx, vy );
+
+    // Free up memory
     free( psr );
     free( ephemfile );
 
