@@ -10,6 +10,9 @@
 #define DEG2RAD(x)  ((x)*PI/180.0)
 #define RAD2DEG(x)  ((x)*180.0/PI)
 
+#define AU  1.49597871e8 // km
+#define KM2AU(x)    ((x)/AU)
+
 typedef struct vec_t
 {
     double x;
@@ -211,7 +214,7 @@ int main( int argc, char *argv[] )
     {
         double v_earth_mag = magnitude( &v_earth );
 
-        printf("\nEarth pos (km):\n  [%lf, %lf, %lf]\n", state[0], state[1], state[2]);
+        printf("\nEarth pos (AU):\n  [%lf, %lf, %lf]\n", KM2AU(state[0]), KM2AU(state[1]), KM2AU(state[2]));
         printf("Earth vel (km/s):\n  [%lf, %lf, %lf]\n", v_earth.x, v_earth.y, v_earth.z );
         printf("  Total: %lf km/s\n", v_earth_mag );
         printf("Earth vel (normalised):\n  [%lf, %lf, %lf]\n", vn_earth.x, vn_earth.y, vn_earth.z );
