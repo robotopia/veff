@@ -12,6 +12,10 @@
 
 #define AU  1.49597871e8 // km
 #define KM2AU(x)    ((x)/AU)
+#define KPC2KM(x)   ((x)*3.0857e16)
+#define YRS2SEC(x)  ((x)*365.25*8.64e4)
+#define MAS2RAD(x)  (DEG2RAD((x)/3.6e6))
+#define PM2TV(kpc,masyr)  (KPC2KM(kpc)*MAS2RAD(masyr)/YRS2SEC(1.0))
 
 typedef struct vec_t
 {
@@ -253,6 +257,8 @@ int main( int argc, char *argv[] )
     double komr  = DEG2RAD(kom);
     double rajr  = DEG2RAD(rajd);
     double decjr = DEG2RAD(decjd);
+    double tvra  = PM2TV(pmra,dist);
+    double tvdec = PM2TV(pmdec,dist);
 
     // Other constants
     double c = 2.99792458e8;
@@ -264,6 +270,8 @@ int main( int argc, char *argv[] )
         printf("  komr  = %.12f rad\n", komr);
         printf("  rajr  = %.12f rad\n", rajr);
         printf("  decjr = %.12f rad\n", decjr);
+        printf("  tvra  = %.12f km/s\n", tvra);
+        printf("  tvdec = %.12f km/s\n", tvdec);
     }
 
     // Set "up" and target reference frame (unit) vectors.
