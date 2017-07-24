@@ -1,0 +1,1431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<geogebra format="5.0" version="5.0.357.0" id="19c5637e-240e-4a07-9e16-5ab7042ce8a2"  xsi:noNamespaceSchemaLocation="http://www.geogebra.org/ggb.xsd" xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+<gui>
+	<window width="1920" height="1054" />
+	<perspectives>
+<perspective id="tmp">
+	<panes>
+		<pane location="" divider="0.19322916666666667" orientation="1" />
+		<pane location="1" divider="0.2604166666666667" orientation="1" />
+	</panes>
+	<views>
+		<view id="4097" visible="false" inframe="true" stylebar="true" location="1,1,1,1" size="400" window="2880,504,700,550" />
+		<view id="8" toolbar="1001 | 1002 | 1003  || 1005 | 1004 || 1006 | 1007 | 1010 || 1008 1009 || 66 68 || 6" visible="false" inframe="false" stylebar="false" location="1,3,3" size="300" window="100,100,600,400" />
+		<view id="1" visible="true" inframe="false" stylebar="false" location="1,3" size="500" window="100,100,600,400" />
+		<view id="4" toolbar="0 || 2020 , 2021 , 2022 , 66 || 2001 , 2003 , 2002 , 2004 , 2005 || 2040 , 2041 , 2042 , 2044 , 2043" visible="false" inframe="false" stylebar="false" location="1,1" size="300" window="100,100,600,400" />
+		<view id="512" toolbar="0 | 1 501 5 19 , 67 | 2 15 45 18 , 7 37 | 514 3 9 , 13 44 , 47 | 16 | 551 550 11 , 22 , 23 , 55 56 57 , 12 | 69 | 510 511 , 512 513 | 533 531 , 534 532 , 522 523 , 537 536 , 535 | 521 520 | 36 , 38 49 560 | 571 30 29 570 31 33 | 17 | 540 40 41 42 , 27 28 35 , 6 , 502" visible="true" inframe="false" stylebar="true" location="1,1" size="1016" window="333,159,600,400" />
+		<view id="2" visible="true" inframe="false" stylebar="true" location="3" size="371" window="100,100,250,400" />
+		<view id="16" visible="false" inframe="false" stylebar="false" location="1" size="150" window="50,50,500,500" />
+		<view id="32" visible="false" inframe="false" stylebar="true" location="1" size="150" window="50,50,500,500" />
+		<view id="64" toolbar="0" visible="false" inframe="true" stylebar="true" location="1" size="150" window="50,50,500,500" />
+		<view id="70" toolbar="0 || 2020 || 2021 || 2022" visible="false" inframe="true" stylebar="true" location="1" size="150" window="50,50,500,500" />
+	</views>
+	<toolbar show="true" items="0 39 | 1 501 67 , 5 19 , 72 | 2 15 45 , 18 65 , 7 37 | 4 3 8 9 , 13 44 , 58 , 47 | 16 51 64 , 70 | 10 34 53 11 , 24  20 22 , 21 23 | 55 56 57 , 12 | 36 46 , 38 49  50 , 71 | 30 29 54 32 31 33 | 17 26 62 73 , 14 68 | 25 52 60 61 | 40 41 42 , 27 28 35 , 6" position="1" help="false" />
+	<input show="true" cmd="true" top="false" />
+	<dockBar show="true" east="true" />
+</perspective>
+	</perspectives>
+	<labelingStyle  val="0"/>
+	<font  size="12"/>
+</gui>
+<euclidianView>
+	<viewNumber viewNo="1"/>
+	<size  width="500" height="898"/>
+	<coordSystem xZero="265.8352200045379" yZero="722.4723542458647" scale="20.999495932087495" yscale="20.99949593208756"/>
+	<evSettings axes="true" grid="false" gridIsBold="false" pointCapturing="3" rightAngleStyle="1" checkboxSize="26" gridType="0"/>
+	<bgColor r="255" g="255" b="255"/>
+	<axesColor r="0" g="0" b="0"/>
+	<gridColor r="192" g="192" b="192"/>
+	<lineStyle axes="1" grid="10"/>
+	<axis id="0" show="true" label="" unitLabel="" tickStyle="1" showNumbers="true"/>
+	<axis id="1" show="true" label="" unitLabel="" tickStyle="1" showNumbers="true"/>
+</euclidianView>
+<algebraView>
+	<auxiliary show="true"/>
+</algebraView>
+<kernel>
+	<uses3D val="true"/>
+	<continuous val="false"/>
+	<usePathAndRegionParameters val="true"/>
+	<decimals val="5"/>
+	<angleUnit val="degree"/>
+	<algebraStyle val="0" spreadsheet="0"/>
+	<coordStyle val="0"/>
+</kernel>
+<scripting blocked="false" disabled="false"/>
+<euclidianView3D>
+	<coordSystem xZero="0.12796863157447252" yZero="2.220446049250313E-16" zZero="1.4292928344628013" scale="152.40464914650616" xAngle="16.0" zAngle="-43694.06729349176"/>
+	<evSettings axes="false" grid="true" gridIsBold="false" pointCapturing="3" rightAngleStyle="1" gridType="0"/>
+	<axis id="0" show="false" label="" unitLabel="" tickStyle="1" showNumbers="true"/>
+	<axis id="1" show="false" label="" unitLabel="" tickStyle="1" showNumbers="true"/>
+	<axis id="2" show="false" label="" unitLabel="" tickStyle="1" showNumbers="true"/>
+	<plate show="false"/>
+	<bgColor r="0" g="0" b="0"/>
+	<clipping use="false" show="false" size="2"/>
+	<projection type="1"/>
+</euclidianView3D>
+<construction title="" author="" date="">
+<expression label ="freq" exp="__FREQ__"/>
+<element type="numeric" label="freq">
+	<value val="__FREQ__"/>
+	<symbolic val="true" />
+	<show object="false" label="false"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="3"/>
+	<animation step="0.1" speed="1" type="0" playing="false"/>
+	<caption val="Frequency of observation (MHz)"/>
+</element>
+<expression label ="α" exp="0"/>
+<element type="numeric" label="α">
+	<value val="0.0"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="D" exp="__DIST__"/>
+<element type="numeric" label="D">
+	<value val="__DIST__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="3"/>
+	<animation step="0.1" speed="1" type="0" playing="false"/>
+	<caption val="Distance to pulsar (in kpc)"/>
+</element>
+<expression label ="lightspeed" exp="299792458"/>
+<element type="numeric" label="lightspeed">
+	<value val="2.99792458E8"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="B_a" exp="__A1__"/>
+<element type="numeric" label="B_a">
+	<value val="__A1__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="ecc" exp="__ECC__"/>
+<element type="numeric" label="ecc">
+	<value val="__ECC__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<element type="point3d" label="E_{__EPOCH__}">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+	<isShape val="false"/>
+	<coords x="0.99958906" y="0.02633219" z="0.01132811" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<expression label ="v_{E,z}" exp="__VEZ__"/>
+<element type="numeric" label="v_{E,z}">
+	<value val="__VEZ__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="v_{E,y}" exp="__VEY__"/>
+<element type="numeric" label="v_{E,y}">
+	<value val="__VEY__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="v_{E,x}" exp="__VEX__"/>
+<element type="numeric" label="v_{E,x}">
+	<value val="__VEX__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="Vscale" exp="50"/>
+<element type="numeric" label="Vscale">
+	<value val="50.0"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label="V_{Earth}" exp="(v_{E,x}, v_{E,y}, v_{E,z}) / Vscale" type="vector" />
+<element type="vector3d" label="V_{Earth}">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="-0.0277974" y="0.5442546" z="0.2359592" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="E_{__EPOCH__}"/>
+</element>
+<command name="Translate">
+	<input a0="E_{__EPOCH__}" a1="V_{Earth}"/>
+	<output a0="F"/>
+</command>
+<element type="point3d" label="F">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.9717916600000001" y="0.57058679" z="0.24728731" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<element type="numeric" label="s">
+	<value val="0.263"/>
+	<symbolic val="true" />
+	<show object="true" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<slider min="0" max="1" absoluteScreenLocation="true" width="400.0" x="30.0" y="50.0" fixed="true" horizontal="true" showAlgebra="false"/>
+	<lineStyle thickness="10" type="0" typeHidden="1"/>
+	<animation step="0.001" speed="1" type="0" playing="false"/>
+</element>
+<element type="numeric" label="RA_{Pulsar}">
+	<value val="__RA__"/>
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<command name="Intersect">
+	<input a0="xAxis" a1="zAxis"/>
+	<output a0="O"/>
+</command>
+<element type="point3d" label="O">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.0" y="0.0" z="0.0" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<element type="numeric" label="Dec_{Pulsar}">
+	<value val="__DEC__"/>
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label="LoS" exp="((cos(Dec_{Pulsar}) * cos(RA_{Pulsar})), (cos(Dec_{Pulsar}) * sin(RA_{Pulsar})), sin(Dec_{Pulsar}))" type="point" />
+<element type="point3d" label="LoS">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.24049302072848927" y="0.6347704775089686" z="-0.7343225094356856" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Dilate">
+	<input a0="LoS" a1="4" a2="O"/>
+	<output a0="PulsarSystem"/>
+</command>
+<element type="point3d" label="PulsarSystem">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="3"/>
+	<isShape val="false"/>
+	<coords x="0.9619720829139571" y="2.5390819100358746" z="-2.937290037742742" w="1.0"/>
+	<pointSize val="3"/>
+	<caption val="J0437-4715"/>
+</element>
+<command name="Dilate">
+	<input a0="O" a1="s" a2="PulsarSystem"/>
+	<output a0="screenpoint"/>
+</command>
+<element type="point3d" label="screenpoint">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="3"/>
+	<isShape val="false"/>
+	<coords x="0.7089734251075863" y="1.8713033676964395" z="-2.164782757816401" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Line">
+	<input a0="O" a1="screenpoint"/>
+	<output a0="f"/>
+</command>
+<element type="line3d" label="f">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="0.0" oy="0.0" oz="0.0" ow="1.0" vx="0.7089734251075863" vy="1.8713033676964395" vz="-2.164782757816401" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="OrthogonalPlane">
+	<input a0="screenpoint" a1="f"/>
+	<output a0="screen"/>
+</command>
+<element type="plane3d" label="screen">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="99" g="219" b="219" alpha="0.5"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.7089734251075863" y="1.8713033676964395" z="-2.164782757816401" w="-8.690704"/>
+	<fading val="0.1"/>
+	<lineStyle thickness="0" type="0" typeHidden="1"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="F" a1="screen"/>
+	<output a0="m"/>
+</command>
+<element type="line3d" label="m">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="0.9717916600000001" oy="0.57058679" oz="0.24728731" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="Intersect">
+	<input a0="m" a1="screen"/>
+	<output a0="G"/>
+</command>
+<element type="point3d" label="G">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="1.5811259111349165" y="2.178897053573737" z="-1.6132567300021585" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="E_{__EPOCH__}" a1="screen"/>
+	<output a0="l"/>
+</command>
+<element type="line3d" label="l">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="0.99958906" oy="0.02633219" oz="0.01132811" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="Intersect">
+	<input a0="l" a1="screen"/>
+	<output a0="E&apos;_{__EPOCH__}"/>
+</command>
+<element type="point3d" label="E&apos;_{__EPOCH__}">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="1.6487300814189205" y="1.7397106277133687" z="-1.9707621077620554" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Vector">
+	<input a0="E&apos;_{__EPOCH__}" a1="G"/>
+	<output a0="V_{Earth⊥}"/>
+</command>
+<element type="vector3d" label="V_{Earth⊥}">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="-0.067604170284004" y="0.4391864258603684" z="0.3575053777598969" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="E&apos;_{__EPOCH__}"/>
+</element>
+<element type="numeric" label="Ω">
+	<value val="__BIGOMEGA__"/>
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<slider min="-5" max="5" absoluteScreenLocation="true" width="200.0" x="30.0" y="50.0" fixed="true" horizontal="true" showAlgebra="false"/>
+	<lineStyle thickness="10" type="0" typeHidden="1"/>
+	<animation step="0.1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="H" exp="(0, 0, 1)" type="point"/>
+<element type="point3d" label="H">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+	<isShape val="false"/>
+	<coords x="0.0" y="0.0" z="1.0" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="H" a1="screen"/>
+	<output a0="n"/>
+</command>
+<element type="line3d" label="n">
+	<show object="false" label="false" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="0.0" oy="0.0" oz="1.0" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="Intersect">
+	<input a0="n" a1="screen"/>
+	<output a0="I"/>
+</command>
+<element type="point3d" label="I">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.8855728635906988" y="2.3374296176565137" z="-1.7040123056803238" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Distance">
+	<input a0="I" a1="screenpoint"/>
+	<output a0="o"/>
+</command>
+<element type="numeric" label="o">
+	<value val="0.6788007455329415"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+</element>
+<command name="Dilate">
+	<input a0="I" a1="1 / o" a2="screenpoint"/>
+	<output a0="Dec_{unit}"/>
+</command>
+<element type="point3d" label="Dec_{unit}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.9691373092006428" y="2.557994201534738" z="-1.4859820122834597" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Rotate">
+	<input a0="Dec_{unit}" a1="(-(90°))" a2="f"/>
+	<output a0="RA_{unit}"/>
+</command>
+<element type="point3d" label="RA_{unit}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="-0.22616178457842517" y="2.225594405694156" z="-2.164782757816402" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Vector">
+	<input a0="screenpoint" a1="RA_{unit}"/>
+	<output a0="e_{RA}"/>
+</command>
+<element type="vector3d" label="e_{RA}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="-0.9351352096860115" y="0.35429103799771666" z="-8.881784197001252E-16" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="screenpoint"/>
+</element>
+<command name="Vector">
+	<input a0="screenpoint" a1="Dec_{unit}"/>
+	<output a0="e_{Dec}"/>
+</command>
+<element type="vector3d" label="e_{Dec}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.26016388409305646" y="0.6866908338382987" z="0.6788007455329412" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="screenpoint"/>
+</element>
+<expression label="ascnode" exp="(cos(Ω) * e_{RA}) + (sin(Ω) * e_{Dec})" type="vector" />
+<element type="vector3d" label="ascnode">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.7058658559315371" y="-0.6336625428284747" z="-0.31658359914277096" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="2"/>
+	<startPoint exp="PulsarSystem"/>
+</element>
+<expression label="e_{LoS}" exp="e_{RA} ⊗ e_{Dec}" type="vector" />
+<element type="vector3d" label="e_{LoS}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.2404930207284903" y="0.6347704775089678" z="-0.7343225094356861" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="screenpoint"/>
+</element>
+<expression label="ascnode_1" exp="ascnode ⊗ e_{LoS}" type="vector" />
+<element type="vector3d" label="ascnode_1">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.6662705909845678" y="0.44219704058167225" z="0.6004542254742542" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="PulsarSystem"/>
+</element>
+<expression label ="v_{μ⊥,RA}" exp="__VMRA__"/>
+<element type="numeric" label="v_{μ⊥,RA}">
+	<value val="__VMRA__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="v_{μ⊥,Dec}" exp="__VMDEC__"/>
+<element type="numeric" label="v_{μ⊥,Dec}">
+	<value val="__VMDEC__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label="V_μ" exp="((v_{μ⊥,Dec} * e_{Dec}) + (v_{μ⊥,RA} * e_{RA})) / Vscale" type="vector" />
+<element type="vector3d" label="V_μ">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="-1.964546281875021" y="-0.09003783843744316" z="-0.7212267424497953" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="2"/>
+	<startPoint exp="Pulsar"/>
+</element>
+<expression label ="T_0" exp="__T0__"/>
+<element type="numeric" label="T_0">
+	<value val="__T0__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="P_b" exp="__PB__"/>
+<element type="numeric" label="P_b">
+	<value val="__PB__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="ω" exp="__OMEGA__"/>
+<element type="numeric" label="ω">
+	<value val="__OMEGA__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="sini" exp="__SINI__"/>
+<element type="numeric" label="sini">
+	<value val="__SINI__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label="a" exp="(B_a * lightspeed / sini)" />
+<element type="numeric" label="a">
+	<value val="1.4962574475003402E9"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+</element>
+<expression label="cosi" exp="sqrt(1 - sini^(2))" />
+<element type="numeric" label="cosi">
+	<value val="0.7382199197407684"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+</element>
+<expression label="B_{norm}" exp="(cosi * e_{LoS}) + (sini * ascnode_1)" type="vector" />
+<element type="vector3d" label="B_{norm}">
+	<show object="false" label="false" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.6269763056023396" y="0.7668886979501088" z="-0.13704903199084878" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="PulsarSystem"/>
+</element>
+<expression label="ascnode_2" exp="B_{norm} ⊗ ascnode" type="vector" />
+<element type="vector3d" label="ascnode_2">
+	<show object="false" label="false" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="-0.329627222242461" y="0.10175218313401746" z="-0.9386119472839569" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="PulsarSystem"/>
+</element>
+<expression label ="epoch" exp="__EPOCH__"/>
+<element type="numeric" label="epoch">
+	<value val="__EPOCH__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label="θ" exp="((Mod[epoch - T_0, P_b] * 2) * π / P_b)" />
+<element type="numeric" label="θ">
+	<value val="3.411583870720177"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+</element>
+<expression label="B_{r,a}" exp="(1 - ecc^(2)) / (1 + (ecc * cos(θ)))" />
+<element type="numeric" label="B_{r,a}">
+	<value val="1.0000184862047001"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+</element>
+<expression label="v_{bin}" exp="(((2 * π) * a / ((P_b * 86400))) * sqrt(2 / B_{r,a} - 1) / 1000)" />
+<element type="numeric" label="v_{bin}">
+	<value val="18.952801033924192"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+</element>
+<expression label="B_r" exp="(cos(ω + θ) * ascnode) + (sin(ω + θ) * ascnode_2)" type="vector" />
+<element type="vector3d" label="B_r">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.2732110418751247" y="-0.05170574503642313" z="0.9605635026002904" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="PulsarSystem"/>
+</element>
+<expression label="V_{bin}" exp="(v_{bin} * (B_{norm} ⊗ B_r) / Vscale)" type="vector" />
+<element type="vector3d" label="V_{bin}">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.2765437584934093" y="-0.2424798109098517" z="-0.09170909307189146" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="2"/>
+	<startPoint exp="Pulsar"/>
+</element>
+<expression label ="Bscale" exp="0.4"/>
+<element type="numeric" label="Bscale">
+	<value val="0.4"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label="Pulsar" exp="PulsarSystem + (B_r * Bscale)" type="point" />
+<element type="point3d" label="Pulsar">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="3"/>
+	<isShape val="false"/>
+	<coords x="1.071256499664007" y="2.5183996120213052" z="-2.553064636702626" w="1.0"/>
+	<pointSize val="3"/>
+	<caption val="J0437-4715"/>
+</element>
+<expression label="P" exp="Pulsar + V_{bin}" type="point" />
+<element type="point3d" label="P">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="1.3478002581574162" y="2.2759198011114536" z="-2.6447737297745175" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="P" a1="screen"/>
+	<output a0="d"/>
+</command>
+<element type="line3d" label="d">
+	<show object="false" label="false" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="1.3478002581574162" oy="2.2759198011114536" oz="-2.6447737297745175" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="Intersect">
+	<input a0="d" a1="screen"/>
+	<output a0="Q"/>
+</command>
+<element type="point3d" label="Q">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="1.1643184800993371" y="1.791627926364652" z="-2.084529614202272" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="Pulsar" a1="screen"/>
+	<output a0="p"/>
+</command>
+<element type="line3d" label="p">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="1.071256499664007" oy="2.5183996120213052" oz="-2.553064636702626" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="Intersect">
+	<input a0="p" a1="screen"/>
+	<output a0="Pulsar&apos;"/>
+</command>
+<element type="point3d" label="Pulsar&apos;">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.8829484763654889" y="2.021369080715702" z="-1.9780840414380556" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Vector">
+	<input a0="Pulsar&apos;" a1="Q"/>
+	<output a0="V_{bin⊥}"/>
+</command>
+<element type="vector3d" label="V_{bin⊥}">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.28137000373384824" y="-0.22974115435105014" z="-0.1064455727642164" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="Pulsar&apos;"/>
+</element>
+<command name="Translate">
+	<input a0="Pulsar&apos;" a1="V_μ"/>
+	<output a0="t"/>
+</command>
+<element type="point3d" label="t">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="3"/>
+	<isShape val="false"/>
+	<coords x="-1.081597805509532" y="1.931331242278259" z="-2.699310783887851" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Vector">
+	<input a0="Pulsar&apos;" a1="t"/>
+	<output a0="V_{μ⊥}"/>
+</command>
+<element type="vector3d" label="V_{μ⊥}">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="-1.964546281875021" y="-0.09003783843744317" z="-0.7212267424497956" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="Pulsar&apos;"/>
+</element>
+<expression label="V_{eff⊥}" exp="((1 - s) * (V_{μ⊥} + V_{bin⊥})) + (s * V_{Earth⊥})" type="vector" />
+<element type="vector3d" label="V_{eff⊥}">
+	<show object="true" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="-1.2582808137747374" y="-0.12017108768384267" z="-0.515970581961874" w="0.0"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<startPoint exp="screenpoint"/>
+</element>
+<command name="Length">
+	<input a0="V_{eff⊥}"/>
+	<output a0="v_{eff⊥}"/>
+</command>
+<element type="numeric" label="v_{eff⊥}">
+	<value val="1.3652609047646562"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+</element>
+<command name="Sphere">
+	<input a0="O" a1="0.2"/>
+	<output a0="Sun"/>
+</command>
+<element type="quadric" label="Sun">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="255" g="255" b="0" alpha="0.75"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="3" type="0" typeHidden="1"/>
+	<eigenvectors  x0="1.0" y0="0.0" z0="0.0" x1="0.0" y1="1.0" z1="0.0" x2="0.0" y2="0.0" z2="1.0"/>
+	<matrix A0="1.0" A1="1.0" A2="1.0" A3="-0.04000000000000001" A4="0.0" A5="0.0" A6="0.0" A7="-0.0" A8="-0.0" A9="-0.0"/>
+</element>
+<expression label ="E_{56500}" exp="(0.567178, -0.775154, -0.336122)" type="point"/>
+<element type="point3d" label="E_{56500}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+	<isShape val="false"/>
+	<coords x="0.567178" y="-0.775154" z="-0.336122" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<expression label ="E_{56573}" exp="(0.967054, 0.23025, 0.099727)" type="point"/>
+<element type="point3d" label="E_{56573}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+	<isShape val="false"/>
+	<coords x="0.967054" y="0.23025" z="0.099727" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<expression label ="E_{56646}" exp="(0.034215, 0.900057, 0.390093)" type="point"/>
+<element type="point3d" label="E_{56646}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+	<isShape val="false"/>
+	<coords x="0.034215" y="0.900057" z="0.390093" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<expression label ="E_{56719}" exp="(-0.942092, 0.277197, 0.12006)" type="point"/>
+<element type="point3d" label="E_{56719}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+	<isShape val="false"/>
+	<coords x="-0.942092" y="0.277197" z="0.12006" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<expression label ="E_{56792}" exp="(-0.593718, -0.750994, -0.325688)" type="point"/>
+<element type="point3d" label="E_{56792}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+	<isShape val="false"/>
+	<coords x="-0.593718" y="-0.750994" z="-0.325688" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Circle">
+	<input a0="E_{56500}" a1="E_{56646}" a2="E_{56719}"/>
+	<output a0="E_{orbit}"/>
+</command>
+<element type="conic3d" label="E_{orbit}">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="255" g="255" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<eigenvectors  x0="1.0" y0="0.0" z0="1.0" x1="-0.0" y1="1.0" z1="1.0"/>
+	<matrix A0="1.0" A1="1.0" A2="0.0" A3="0.0" A4="-0.9510217768425442" A5="-0.30816322568313753"/>
+	<eqnStyle style="implicit"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="E_{56500}" a1="screen"/>
+	<output a0="g"/>
+</command>
+<element type="line3d" label="g">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="0.567178" oy="-0.775154" oz="-0.336122" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="E_{56573}" a1="screen"/>
+	<output a0="h"/>
+</command>
+<element type="line3d" label="h">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="0.967054" oy="0.23025" oz="0.099727" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="E_{56646}" a1="screen"/>
+	<output a0="i"/>
+</command>
+<element type="line3d" label="i">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="0.034215" oy="0.900057" oz="0.390093" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="E_{56719}" a1="screen"/>
+	<output a0="j"/>
+</command>
+<element type="line3d" label="j">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="-0.942092" oy="0.277197" oz="0.12006" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="E_{56792}" a1="screen"/>
+	<output a0="k"/>
+</command>
+<element type="line3d" label="k">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="-0.593718" oy="-0.750994" oz="-0.325688" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="Intersect">
+	<input a0="g" a1="screen"/>
+	<output a0="A"/>
+</command>
+<element type="point3d" label="A">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="1.3023220135930726" y="1.1652254552240602" z="-2.58081415457086" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Intersect">
+	<input a0="h" a1="screen"/>
+	<output a0="B"/>
+</command>
+<element type="point3d" label="B">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="1.602558284090843" y="1.9076348848061486" z="-1.8407247405000715" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Intersect">
+	<input a0="i" a1="screen"/>
+	<output a0="C"/>
+</command>
+<element type="point3d" label="C">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.6726989564257049" y="2.5853065954954286" z="-1.5594568858832678" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Intersect">
+	<input a0="j" a1="screen"/>
+	<output a0="D&apos;"/>
+</command>
+<element type="point3d" label="D&apos;">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="-0.19974467557097608" y="2.2365892691723888" z="-2.1466267774221937" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Intersect">
+	<input a0="k" a1="screen"/>
+	<output a0="E"/>
+</command>
+<element type="point3d" label="E">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.206723055762856" y="1.3617340519213053" z="-2.7697584472115286" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Conic">
+	<input a0="A" a1="B" a2="C" a3="D&apos;" a4="E"/>
+	<output a0="E&apos;_{orbit}"/>
+</command>
+<element type="conic3d" label="E&apos;_{orbit}">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<eigenvectors  x0="-0.36106688804811043" y0="-0.9325399199794361" z0="1.0" x1="0.9325399199794361" y1="-0.36106688804811043" z1="1.0"/>
+	<matrix A0="-2.932582455778605" A1="-2.616935578153049" A2="0.0" A3="0.14376678451815877" A4="1.598893547733862" A5="2.0206845004123277"/>
+	<eqnStyle style="implicit"/>
+</element>
+<command name="Line">
+	<input a0="screenpoint" a1="Dec_{unit}"/>
+	<output a0="Dec_{axis}"/>
+</command>
+<element type="line3d" label="Dec_{axis}">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="15" typeHidden="1"/>
+	<coords ox="0.7089734251075863" oy="1.8713033676964395" oz="-2.164782757816401" ow="1.0" vx="0.26016388409305646" vy="0.6866908338382987" vz="0.6788007455329412" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="Line">
+	<input a0="screenpoint" a1="RA_{unit}"/>
+	<output a0="RA_{axis}"/>
+</command>
+<element type="line3d" label="RA_{axis}">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="15" typeHidden="1"/>
+	<coords ox="0.7089734251075863" oy="1.8713033676964395" oz="-2.164782757816401" ow="1.0" vx="-0.9351352096860115" vy="0.35429103799771666" vz="-8.881784197001252E-16" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="Circle">
+	<input a0="PulsarSystem" a1="Bscale" a2="B_{norm}"/>
+	<output a0="B_{orbit}"/>
+</command>
+<element type="conic3d" label="B_{orbit}">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="255" g="255" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="2"/>
+	<eigenvectors  x0="1.0" y0="0.0" z0="1.0" x1="-0.0" y1="1.0" z1="1.0"/>
+	<matrix A0="1.0" A1="1.0" A2="-0.16000000000000003" A3="0.0" A4="-0.0" A5="-0.0"/>
+	<eqnStyle style="implicit"/>
+</element>
+<expression label ="θ_1" exp="0"/>
+<element type="numeric" label="θ_1">
+	<value val="0.0"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="θ_2" exp="(2 * π / 5)"/>
+<element type="numeric" label="θ_2">
+	<value val="1.2566370614359172"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="θ_3" exp="(4 * π / 5)"/>
+<element type="numeric" label="θ_3">
+	<value val="2.5132741228718345"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="θ_4" exp="(6 * π / 5)"/>
+<element type="numeric" label="θ_4">
+	<value val="3.7699111843077517"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="θ_5" exp="(8 * π / 5)"/>
+<element type="numeric" label="θ_5">
+	<value val="5.026548245743669"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label="B_{θ1}" exp="PulsarSystem + (((cos(θ_1) * ascnode) + (sin(θ_1) * ascnode_2)) * Bscale)" type="point" />
+<element type="point3d" label="B_{θ1}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="1.244318425286572" y="2.2856168929044847" z="-3.0639234773998507" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<expression label="B_{θ2}" exp="PulsarSystem + (((cos(θ_2) * ascnode) + (sin(θ_2) * ascnode_2)) * Bscale)" type="point" />
+<element type="point3d" label="B_{θ2}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.923824253941917" y="2.499465742989484" z="-3.3334911261476994" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<expression label="B_{θ3}" exp="PulsarSystem + (((cos(θ_3) * ascnode) + (sin(θ_3) * ascnode_2)) * Bscale)" type="point" />
+<element type="point3d" label="B_{θ3}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.6560490856396035" y="2.7680627894286016" z="-3.055522337099599" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<expression label="B_{θ4}" exp="PulsarSystem + (((cos(θ_4) * ascnode) + (sin(θ_4) * ascnode_2)) * Bscale)" type="point" />
+<element type="point3d" label="B_{θ4}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.8110491016302052" y="2.7202160433208107" z="-2.614160528908375" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<expression label="B_{θ5}" exp="PulsarSystem + (((cos(θ_5) * ascnode) + (sin(θ_5) * ascnode_2)) * Bscale)" type="point" />
+<element type="point3d" label="B_{θ5}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="1.1746195480714876" y="2.422048081535992" z="-2.619352719158187" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="B_{θ1}" a1="screen"/>
+	<output a0="q"/>
+</command>
+<element type="line3d" label="q">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="1.244318425286572" oy="2.2856168929044847" oz="-3.0639234773998507" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="B_{θ2}" a1="screen"/>
+	<output a0="r"/>
+</command>
+<element type="line3d" label="r">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="0.923824253941917" oy="2.499465742989484" oz="-3.3334911261476994" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="B_{θ3}" a1="screen"/>
+	<output a0="t_1"/>
+</command>
+<element type="line3d" label="t_1">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="0.6560490856396035" oy="2.7680627894286016" oz="-3.055522337099599" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="B_{θ4}" a1="screen"/>
+	<output a0="b"/>
+</command>
+<element type="line3d" label="b">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="0.8110491016302052" oy="2.7202160433208107" oz="-2.614160528908375" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="OrthogonalLine">
+	<input a0="B_{θ5}" a1="screen"/>
+	<output a0="c"/>
+</command>
+<element type="line3d" label="c">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<coords ox="1.1746195480714876" oy="2.422048081535992" oz="-2.619352719158187" ow="1.0" vx="0.24049302072848924" vy="0.6347704775089686" vz="-0.7343225094356857" vw="0.0"/>
+	<eqnStyle style="parametric" parameter="λ"/>
+</element>
+<command name="Intersect">
+	<input a0="b" a1="screen"/>
+	<output a0="J"/>
+</command>
+<element type="point3d" label="J">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.5961922990638433" y="2.153111206980987" z="-1.9581157673933132" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Intersect">
+	<input a0="c" a1="screen"/>
+	<output a0="K"/>
+</command>
+<element type="point3d" label="K">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.9833357084374296" y="1.9171630172773426" z="-2.0352857524367067" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Intersect">
+	<input a0="q" a1="screen"/>
+	<output a0="L"/>
+</command>
+<element type="point3d" label="L">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.9913197674802015" y="1.6178383505650498" z="-2.29141619747351" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Intersect">
+	<input a0="r" a1="screen"/>
+	<output a0="M"/>
+</command>
+<element type="point3d" label="M">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.6091107779632339" y="1.6687937225692635" z="-2.372543533016497" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Intersect">
+	<input a0="t_1" a1="screen"/>
+	<output a0="N"/>
+</command>
+<element type="point3d" label="N">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="68" g="68" b="68" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="0.36490857259322385" y="1.999610541089555" z="-2.1665525387619775" w="1.0"/>
+	<pointSize val="3"/>
+</element>
+<command name="Conic">
+	<input a0="J" a1="K" a2="L" a3="M" a4="N"/>
+	<output a0="B&apos;_{orbit}"/>
+</command>
+<element type="conic3d" label="B&apos;_{orbit}">
+	<show object="true" label="false" ev="4"/>
+	<objColor r="0" g="0" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+	<eigenvectors  x0="-0.9724177037550921" y0="-0.23324624203548053" z0="1.0" x1="0.23324624203548053" y1="-0.9724177037550921" z1="1.0"/>
+	<matrix A0="-1.1374728606951667" A1="-1.9471078066415735" A2="-0.0" A3="0.20605601302622176" A4="0.261561120211374" A5="0.4190978771460967"/>
+	<eqnStyle style="implicit"/>
+</element>
+<element type="image" label="pic1">
+	<file name="images/ss.png"/>
+	<inBackground val="false"/>
+	<startPoint number="0" exp="img_{left}"/>
+	<startPoint number="1" exp="img_{right}"/>
+	<show object="true" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="1.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+	<isShape val="false"/>
+</element>
+<expression label ="img_{dx}" exp="__IMG_DX__"/>
+<element type="numeric" label="img_{dx}">
+	<value val="__IMG_DX__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="0.1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="img_{w}" exp="__IMG_W__"/>
+<element type="numeric" label="img_{w}">
+	<value val="__IMG_W__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label ="img_{ratio}" exp="__IMG_RATIO__"/>
+<element type="numeric" label="img_{ratio}">
+	<value val="__IMG_RATIO__"/>
+	<symbolic val="true" />
+	<show object="false" label="true"/>
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<layer val="0"/>
+	<labelMode val="1"/>
+	<animation step="1" speed="1" type="0" playing="false"/>
+</element>
+<expression label="img_{left}" exp="(((-img_{w}) * img_{dx} / 2), 0)" type="point" />
+<element type="point" label="img_{left}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="-9.75" y="0.0" z="1.0"/>
+	<pointSize val="3"/>
+	<pointStyle val="0"/>
+</element>
+<expression label="img_{right}" exp="((img_{w} * img_{dx} / 2), 0)" type="point" />
+<element type="point" label="img_{right}">
+	<show object="false" label="true" ev="4"/>
+	<objColor r="192" g="192" b="192" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<isShape val="false"/>
+	<coords x="9.75" y="0.0" z="1.0"/>
+	<pointSize val="3"/>
+	<pointStyle val="0"/>
+</element>
+<expression label="η" exp="(((9257100000 * D / freq^(2) / ((v_{eff⊥} * Vscale))^(2)) * s) * (1 - s) / 2 / cos(α)^(2))" />
+<element type="numeric" label="η">
+	<value val="0.8188658917633973"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+</element>
+<expression label="parab" exp="parab(x) = (img_{ratio} * η * x^(2))" />
+<element type="function" label="parab">
+	<show object="true" label="false" ev="8"/>
+	<objColor r="0" g="100" b="0" alpha="0.0"/>
+	<layer val="0"/>
+	<labelMode val="0"/>
+	<fixed val="true"/>
+	<isShape val="false"/>
+	<lineStyle thickness="2" type="0" typeHidden="1"/>
+</element>
+<expression label="λ" exp="lightspeed / 185000000" />
+<element type="numeric" label="λ">
+	<value val="1.6204997729729729"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+</element>
+<expression label ="pc" exp="(3.0857 * 10^(16))"/>
+<element type="numeric" label="pc">
+	<value val="3.0857E16"/>
+	<symbolic val="true" />
+	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
+	<animation step="0.1" speed="1" type="0" playing="false"/>
+	<caption val="Number of metres in a parsec"/>
+</element>
+</construction>
+</geogebra>
