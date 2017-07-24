@@ -1,0 +1,31 @@
+When I get up to the point of inputing parameters from the "veff" program into geogebra, I want it to be easy to know where to put them.
+This README is just a memo to myself so that I know what needs to go where.
+
+  1. The epoch in question
+         epoch = [user defined] = "__EPOCH__"
+         (Note that the epoch will probably appear in more than one place
+         in the geogebra files. I use it in some of the labels as well.)
+  2. The Earth's velocity in the J2000 frame (km/s):
+         v_{E,x}, v_{E,y}, v_{E,z} = "__VEX__", "__VEY__", "__VEZ__"
+  3. The pulsar's transverse velocity in RA/Dec coords (km/s):
+         v_{μ⟂,RA}, v_{μ⟂,Dec} = "__VMRA__", "__VMDEC__"
+  4. The pulsar's position (rad):
+         RA_{Pulsar}, Dec_{Pulsar} = "__RM__", "__DEC__"
+  5. Values from PSRCAT, etc.
+         T_0  <= 52009.852429 ?? (Check where this came from) = "__T0__"
+         P_b  <= PB = "__PB__"
+         Ω    <= 3.6267941856 ?? (Check where this came from) = "__BIGOMEGA__"
+         ω    <= OM (but check for old values -- current psrcat value
+                     is different than the value we used) = "__OMEGA__"
+         sini <= 0.674560116 (Check source) = "__SINI__"
+         ecc  <= ECC = "__ECC__"
+         B_a  <= A1 = "__A1__"
+         D    <= DIST_A = "__DIST__"
+         freq <= [user defined] = "__FREQ__"
+  6. Specs for the secondary spectrum image:
+         img_{dx}    <= x resolution (mHz) = "__IMG_DX__"
+         img_{w}     <= image width  (in secondary spectrum "pixels") = "__IMG_W__"
+         img_{ratio} <= the aspect ratio of the secondary spectrum pixels
+                        in the image, e.g., "2" means that the secondary
+                        spectrum pixels (within the image) are twice as
+                        high as they are wide. = "__IMG_RATIO__"
