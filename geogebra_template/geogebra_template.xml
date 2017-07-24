@@ -1413,19 +1413,5 @@
 	<isShape val="false"/>
 	<lineStyle thickness="2" type="0" typeHidden="1"/>
 </element>
-<expression label="λ" exp="lightspeed / 185000000" />
-<element type="numeric" label="λ">
-	<value val="1.6204997729729729"/>
-	<symbolic val="true" />
-	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
-</element>
-<expression label ="pc" exp="(3.0857 * 10^(16))"/>
-<element type="numeric" label="pc">
-	<value val="3.0857E16"/>
-	<symbolic val="true" />
-	<objColor r="0" g="0" b="0" alpha="0.10000000149011612"/>
-	<animation step="0.1" speed="1" type="0" playing="false"/>
-	<caption val="Number of metres in a parsec"/>
-</element>
 </construction>
 </geogebra>
