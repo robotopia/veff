@@ -9,10 +9,13 @@ TARGETS = veff parabfit bin2asc
 all: $(TARGETS)
 
 veff: veff.c vec.o par.o
-	gcc -Wall -Wextra -fsanitize=address -o $@ $^ -I$(CSPICE_DIR)/include -L$(CSPICE_DIR)/lib -lasan -lpsrcat -lcspice -lm
+	gcc -Wall -Wextra -fsanitize=address -o $@ $^ -I$(CSPICE_DIR)/include -L$(CSPICE_DIR)/lib -lasan -lcspice -lm
 
-test: veff
-	./$< -p J0437-4715 -e 56559.878 -v -s /usr/local/share/jpl/de430.bsp
+test: 0437.par
+	./veff -p $< -e 56559.878 -v -s /usr/local/share/jpl/de430.bsp
+
+0437.par:
+	psrcat -e2 J0437-4715 > $@
 
 parabfit: pf.c
 	gcc -o $@ $< -lm -lgsl -lgslcblas

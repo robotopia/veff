@@ -3,7 +3,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
-#include "psrcat.h"
 #include "SpiceUsr.h"
 #include "par.h"
 #include "vec.h"
@@ -25,41 +24,14 @@ void usage()
     printf("\n");
 }
 
-double get_psrcat_value( char *psr, char *param )
-{
-    double val, err;
-    char ref[100];
-
-    int ret;
-
-    ret = callPsrcat_val("public", psr, param, &val, &err, ref);
-
-    switch (ret)
-    {
-        case 1:
-            fprintf(stderr, "error: could not open psrcat catalogue\n");
-            exit(EXIT_FAILURE);
-            break;
-        case 2:
-            fprintf(stderr, "error: unrecognised pulsar '%s'\n", psr);
-            exit(EXIT_FAILURE);
-            break;
-        case 3:
-            fprintf(stderr, "error: unrecognised parameter\n");
-            exit(EXIT_FAILURE);
-            break;
-    }
-
-    return val;
-}
-
 int main( int argc, char *argv[] )
 {
 
-    char   *psr       = NULL;
-    char   *ephemfile = NULL;
-    double  epoch     = 0.0;
-    int     verbose   = 0;
+    char   *par       = NULL;  // The name of the pulsar ephemeris par file
+    char   *psr       = NULL;  // The name of the pulsar
+    char   *ephemfile = NULL;  // The name of the NASA planetary ephemeris file
+    double  epoch     = 0.0;   // The epoch in question
+    int     verbose   = 0;     // 0 = verbose output off, 1 = verbose output on
 
     // Parse command line options
     if (argc <= 1)
@@ -81,7 +53,7 @@ int main( int argc, char *argv[] )
                 exit(0);
                 break;
             case 'p':
-                psr = strdup(optarg);
+                par = strdup(optarg);
                 break;
             case 's':
                 ephemfile = strdup(optarg);
@@ -97,7 +69,7 @@ int main( int argc, char *argv[] )
     }
 
     // Error checking on options
-    if (psr == NULL)
+    if (par == NULL)
     {
         fprintf(stderr, "error: option -p is required\n");
         usage();
@@ -123,7 +95,7 @@ int main( int argc, char *argv[] )
         printf( "Inputs:\n" );
         printf( "  Ephemeris = %s\n",  ephemfile );
         printf( "  Epoch     = %lf\n", epoch );
-        printf( "  Pulsar    = %s\n",  psr );
+        printf( "  Par file  = %s\n",  par );
     }
 
     // Open ephemeris file
@@ -153,21 +125,28 @@ int main( int argc, char *argv[] )
         printf("Earth vel (normalised):\n  [%lf, %lf, %lf]\n", vn_earth.x, vn_earth.y, vn_earth.z );
     }
 
-    // Collect the needed values from psrcat
-    double sini  = get_psrcat_value( psr, "sini"   );
-    double ecc   = get_psrcat_value( psr, "ecc"    );
-    double pb    = get_psrcat_value( psr, "pb"     );
-    double a1    = get_psrcat_value( psr, "a1"     );
-    double om    = get_psrcat_value( psr, "om"     );
-    double kom   = get_psrcat_value( psr, "kom"    );
-    double dist  = get_psrcat_value( psr, "dist_a" );
-    double pmra  = get_psrcat_value( psr, "pmra"   );
-    double pmdec = get_psrcat_value( psr, "pmdec"  );
-    double rajd  = get_psrcat_value( psr, "rajd"   );
-    double decjd = get_psrcat_value( psr, "decjd"  );
+    // Collect the needed values from par file
+    FILE *fpar = open_par( par );
+
+    double sini, ecc, pb, a1, om, kom, dist, pmra, pmdec, rajd, decjd;
+    double sini_err, ecc_err, pb_err, a1_err, om_err, kom_err, dist_err,
+           pmra_err, pmdec_err, rajd_err, decjd_err;
+
+    int a = get_par_double( fpar, "SINI",   &sini,  &sini_err  );
+    printf("get_par_double returned %d\n", a);
+    get_par_double( fpar, "ECC",    &ecc,   &ecc_err   );
+    get_par_double( fpar, "PB",     &pb,    &pb_err    );
+    get_par_double( fpar, "A1",     &a1,    &a1_err    );
+    get_par_double( fpar, "OM",     &om,    &om_err    );
+    get_par_double( fpar, "KOM",    &kom,   &kom_err   );
+    get_par_double( fpar, "DIST_A", &dist,  &dist_err  );
+    get_par_double( fpar, "PMRA",   &pmra,  &pmra_err  );
+    get_par_double( fpar, "PMDEC",  &pmdec, &pmdec_err );
+    get_par_double( fpar, "RAJD",   &rajd,  &rajd_err  );
+    get_par_double( fpar, "DECJD",  &decjd, &decjd_err );
 
     if (verbose) {
-        printf("\nValues from PSRCAT:\n");
+        printf("\nValues from %s:\n", par);
         printf("  sini  = %.12f\n", sini);
         printf("  ecc   = %.12f\n", ecc);
         printf("  pb    = %.12f days\n", pb);
@@ -237,8 +216,10 @@ int main( int argc, char *argv[] )
     printf( "  [%lf, %lf]\n", vx, vy );
 
     // Free up memory
-    free( psr );
+    free( par );
     free( ephemfile );
+
+    fclose( fpar );
 
     return 0;
 }

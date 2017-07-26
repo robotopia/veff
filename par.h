@@ -11,5 +11,6 @@
 #define PM2TV(kpc,masyr)  (KPC2KM(kpc)*MAS2RAD(masyr)/YRS2SEC(1.0))
 
 FILE *open_par( char *filename );
+int get_par_double( FILE *f, char *param, double *val, double *err );
 
 #endif
