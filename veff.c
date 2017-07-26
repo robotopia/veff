@@ -5,24 +5,12 @@
 #include <math.h>
 #include "psrcat.h"
 #include "SpiceUsr.h"
+#include "par.h"
+#include "vec.h"
 
 #define PI          (4*atan(1.0))
 #define DEG2RAD(x)  ((x)*PI/180.0)
 #define RAD2DEG(x)  ((x)*180.0/PI)
-
-#define AU  1.49597871e8 // km
-#define KM2AU(x)    ((x)/AU)
-#define KPC2KM(x)   ((x)*3.0857e16)
-#define YRS2SEC(x)  ((x)*365.25*8.64e4)
-#define MAS2RAD(x)  (DEG2RAD((x)/3.6e6))
-#define PM2TV(kpc,masyr)  (KPC2KM(kpc)*MAS2RAD(masyr)/YRS2SEC(1.0))
-
-typedef struct vec_t
-{
-    double x;
-    double y;
-    double z;
-} vec;
 
 void usage()
 {
@@ -35,65 +23,6 @@ void usage()
     printf("               http://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de430.bsp)\n");
     printf("    -v         Turn verbose on (=show working)\n");
     printf("\n");
-}
-
-double dot( vec *v1, vec *v2 )
-{
-    return v1->x * v2->x +
-           v1->y * v2->y +
-           v1->z * v2->z;
-}
-
-void scale( vec *vin, double factor, vec *vout )
-{
-    // Multiply vector vin by a scalar factor
-    vout->x = vin->x * factor;
-    vout->y = vin->y * factor;
-    vout->z = vin->z * factor;
-}
-
-double magnitude( vec *v )
-{
-    return sqrt(dot(v, v));
-}
-
-void normalise( vec *vin, vec *vout )
-{
-    // Normalise the vector length
-    double mag = magnitude( vin );
-    scale( vin, 1.0/mag, vout );
-}
-
-void cross( vec *v1, vec *v2, vec *vout )
-{
-    // Calculate the cross product of two vectors
-    vout->x = (v1->y * v2->z) - (v1->z * v2->y);
-    vout->y = (v1->z * v2->x) - (v1->x * v2->z);
-    vout->z = (v1->x * v2->y) - (v1->y * v2->x);
-}
-
-void cross_norm( vec *v1, vec *v2, vec *vout )
-{
-    // Calculate the normalised cross product of two vectors
-    cross( v1, v2, vout );
-    normalise( vout, vout );
-}
-
-double proj_length( vec *v1, vec *v2 )
-{
-    // Calculate the projected length of v1 onto v2
-    vec vtmp;
-    normalise( v2, &vtmp );   // normalise v2 = "v2n"
-    return dot( v1, &vtmp );  // calculate (v1 dot v2n)
-}
-
-void projection( vec *v1, vec *v2, vec *vout )
-{
-    // Calculate the projection of v1 onto v2.
-    // The result, vout, will be parallel to v2.
-    normalise( v2, vout );          // normalise v2 = "v2n"
-    double len = dot( v1, vout );   // calculate (v1 dot v2n)
-    scale( vout, len, vout );       // calculate (v1 dot v2n) times v2n
 }
 
 double get_psrcat_value( char *psr, char *param )

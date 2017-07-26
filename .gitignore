@@ -1,4 +1,6 @@
 .*.swp
+*.png
+*.o
 veff
 bin2asc
 parabfit
