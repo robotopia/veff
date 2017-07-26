@@ -29,14 +29,13 @@ int get_par_double( FILE *f, char *param, double *val, double *err )
  */
 {
 
-    int MAX_STR_LEN = 4096;
     int nscan;              // The number of items scanned by sscanf
-    char line[MAX_STR_LEN]; // Each line of the file gets put into here
-    char word[MAX_STR_LEN]; // The parameter names get put into here
+    char line[MAXSTRLEN];   // Each line of the file gets put into here
+    char word[MAXSTRLEN];   // The parameter names get put into here
 
     // Read in the file line by line
     rewind(f);
-    while (fgets( line, MAX_STR_LEN, f) != NULL)
+    while (fgets( line, MAXSTRLEN, f) != NULL)
     {
         nscan = sscanf( line, "%s %lf %lf", word, val, err );
         if (strcmp(word, param) == 0) // = Found a match
@@ -46,4 +45,46 @@ int get_par_double( FILE *f, char *param, double *val, double *err )
     *val = NAN;
     *err = NAN;
     return -1; // -1 = Didn't find param in the par file
+}
+
+
+void read_par( char *filename, struct pardata *pd )
+{
+    // Make sure neither input argument is a NULL pointer
+    if (filename == NULL)
+    {
+        fprintf( stderr, "error: read_par: filename cannot be NULL\n" );
+        exit(EXIT_FAILURE);
+    }
+
+    if (pd == NULL)
+    {
+        fprintf( stderr, "error: read_par: pardata cannot be NULL\n" );
+        exit(EXIT_FAILURE);
+    }
+
+    // Open the par file
+    FILE *fpar = open_par( filename );
+
+    // Read through the file line by line and input the values into the
+    // corresponding variables in the pardata struct
+    int nscan;              // The number of items scanned by sscanf
+    char line[MAXSTRLEN];   // Each line of the file gets put into here
+    char param[MAXSTRLEN];  // The parameter names get put into here
+    char val[MAXSTRLEN];    // The parameter names get put into here
+    char err[MAXSTRLEN];    // The parameter names get put into here
+    while (fgets( line, MAXSTRLEN, fpar) != NULL)
+    {
+        // Read next line
+        nscan = sscanf( line, "%s %s %s", param, val, err );
+
+        if (nscan <= 1) continue;  // No values in line, so ignore line
+
+        // Check the param and update the value in the pardata struct
+        if (strcmp(param, "PSRJ") == 0)  { pd->psrf = strdup(val);  continue; };
+        //... lots more to implement here...
+    }
+
+    // Close the par file
+    fclose( fpar );
 }
