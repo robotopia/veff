@@ -15,12 +15,13 @@ void usage()
 {
     printf("usage: veff [OPTIONS]\n");
     printf("  OPTIONS:\n");
-    printf("    -e MJD     MJD epoch to calculate [required]\n");
-    printf("    -h         Display this help and exit\n");
-    printf("    -p PULSAR  Select pulsar PULSAR from psrcat catalogue [required]\n");
-    printf("    -s SPK     SPK = NASA planetary ephemeris file [required] (e.g.\n");
-    printf("               http://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de430.bsp)\n");
-    printf("    -v         Turn verbose on (=show working)\n");
+    printf("    -e MJD  MJD epoch to calculate [required]\n");
+    printf("    -h      Display this help and exit\n");
+    printf("    -p PAR  Supply (PSRCAT-style) ephemeris file [required]\n");
+    printf("    -s SPK  NASA planetary ephemeris file [required] (e.g.");
+    printf(" from\n            http://naif.jpl.nasa.gov/pub/naif/");
+    printf("generic_kernels/spk/planets/de430.bsp)\n");
+    printf("    -v      Turn verbose on (=show working)\n");
     printf("\n");
 }
 
@@ -28,10 +29,11 @@ int main( int argc, char *argv[] )
 {
 
     char   *par       = NULL;  // The name of the pulsar ephemeris par file
-    char   *psr       = NULL;  // The name of the pulsar
     char   *ephemfile = NULL;  // The name of the NASA planetary ephemeris file
     double  epoch     = 0.0;   // The epoch in question
     int     verbose   = 0;     // 0 = verbose output off, 1 = verbose output on
+
+    struct pardata pd;         // A container to hold the par file information
 
     // Parse command line options
     if (argc <= 1)
@@ -104,7 +106,8 @@ int main( int argc, char *argv[] )
     SpiceDouble state[6];
     SpiceDouble lt;
     furnsh_c( ephemfile );
-    spkezr_c( "earth", et, "j2000", "NONE", "solar system barycenter", state, &lt );
+    spkezr_c( "earth", et, "j2000", "NONE", "solar system barycenter",
+              state, &lt );
     unload_c( ephemfile );
 
     // Normalise the velocity vector
@@ -119,54 +122,40 @@ int main( int argc, char *argv[] )
     {
         double v_earth_mag = magnitude( &v_earth );
 
-        printf("\nEarth pos (AU):\n  [%lf, %lf, %lf]\n", KM2AU(state[0]), KM2AU(state[1]), KM2AU(state[2]));
-        printf("Earth vel (km/s):\n  [%lf, %lf, %lf]\n", v_earth.x, v_earth.y, v_earth.z );
+        printf("\nEarth pos (AU):\n  [%lf, %lf, %lf]\n",
+                KM2AU(state[0]), KM2AU(state[1]), KM2AU(state[2]));
+        printf("Earth vel (km/s):\n  [%lf, %lf, %lf]\n",
+                v_earth.x, v_earth.y, v_earth.z );
         printf("  Total: %lf km/s\n", v_earth_mag );
-        printf("Earth vel (normalised):\n  [%lf, %lf, %lf]\n", vn_earth.x, vn_earth.y, vn_earth.z );
+        printf("Earth vel (normalised):\n  [%lf, %lf, %lf]\n",
+                vn_earth.x, vn_earth.y, vn_earth.z );
     }
 
     // Collect the needed values from par file
-    FILE *fpar = open_par( par );
-
-    double sini, ecc, pb, a1, om, kom, dist, pmra, pmdec, rajd, decjd;
-    double sini_err, ecc_err, pb_err, a1_err, om_err, kom_err, dist_err,
-           pmra_err, pmdec_err, rajd_err, decjd_err;
-
-    int a = get_par_double( fpar, "SINI",   &sini,  &sini_err  );
-    printf("get_par_double returned %d\n", a);
-    get_par_double( fpar, "ECC",    &ecc,   &ecc_err   );
-    get_par_double( fpar, "PB",     &pb,    &pb_err    );
-    get_par_double( fpar, "A1",     &a1,    &a1_err    );
-    get_par_double( fpar, "OM",     &om,    &om_err    );
-    get_par_double( fpar, "KOM",    &kom,   &kom_err   );
-    get_par_double( fpar, "DIST_A", &dist,  &dist_err  );
-    get_par_double( fpar, "PMRA",   &pmra,  &pmra_err  );
-    get_par_double( fpar, "PMDEC",  &pmdec, &pmdec_err );
-    get_par_double( fpar, "RAJD",   &rajd,  &rajd_err  );
-    get_par_double( fpar, "DECJD",  &decjd, &decjd_err );
+    read_par( par, &pd );
 
     if (verbose) {
         printf("\nValues from %s:\n", par);
-        printf("  sini  = %.12f\n", sini);
-        printf("  ecc   = %.12f\n", ecc);
-        printf("  pb    = %.12f days\n", pb);
-        printf("  a1    = %.12f lt sec\n", a1);
-        printf("  om    = %.12f deg\n", om);
-        printf("  kom   = %.10f deg\n", kom);
-        printf("  dist  = %.12f kpc\n", dist);
-        printf("  pmra  = %.10f mas/yr\n", pmra);
-        printf("  pmdec = %.10f mas/yr\n", pmdec);
-        printf("  rajd  = %.10f deg\n", rajd);
-        printf("  decjd = %.10f deg\n", decjd);
+        printf("  sini  = %.12f\n", pd.sini);
+        printf("  ecc   = %.12f\n", pd.ecc);
+        printf("  pb    = %.12f days\n", pd.pb);
+        printf("  a1    = %.12f lt sec\n", pd.a1);
+        printf("  om    = %.12f deg\n", pd.om);
+        printf("  kom   = %.10f deg\n", pd.kom);
+        printf("  dist  = %.12f kpc\n", pd.dist);
+        printf("  pmra  = %.10f mas/yr\n", pd.pmra);
+        printf("  pmdec = %.10f mas/yr\n", pd.pmdec);
+        printf("  rajd  = %.10f deg\n", pd.rajd);
+        printf("  decjd = %.10f deg\n", pd.decjd);
     }
 
     // Derive other values
-    double cosi  = sqrt(1-sini*sini);
-    double komr  = DEG2RAD(kom);
-    double rajr  = DEG2RAD(rajd);
-    double decjr = DEG2RAD(decjd);
-    double tvra  = PM2TV(pmra,dist);
-    double tvdec = PM2TV(pmdec,dist);
+    double cosi  = sqrt(1 - pd.sini*pd.sini);
+    double komr  = DEG2RAD(pd.kom);
+    double rajr  = DEG2RAD(pd.rajd);
+    double decjr = DEG2RAD(pd.decjd);
+    double tvra  = PM2TV(pd.pmra, pd.dist);
+    double tvdec = PM2TV(pd.pmdec, pd.dist);
 
     // Other constants
     double c = 2.99792458e8;
@@ -218,8 +207,7 @@ int main( int argc, char *argv[] )
     // Free up memory
     free( par );
     free( ephemfile );
-
-    fclose( fpar );
+    free_par( &pd );
 
     return 0;
 }

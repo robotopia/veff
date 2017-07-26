@@ -52,6 +52,7 @@ struct pardata {
     double w50;
     double w50_err;
     double w10;
+    double w10_err;
     double posepoch;
     double dmepoch;
     char   *binary;
@@ -134,10 +135,13 @@ struct pardata {
     double uprmass;
     double minomdot;
     char   *units;
+    double sini;
+    double sini_err;
 };
 
 FILE *open_par( char *filename );
 int get_par_double( FILE *f, char *param, double *val, double *err );
 void read_par( char *filename, struct pardata *pd );
+void free_par( struct pardata *pd );
 
 #endif
