@@ -184,7 +184,7 @@ void read_par( char *filename, struct pardata *pd )
         else if (strcmp(param, "T0"      ) == 0)  pd->t0       = atof(val);
         else if (strcmp(param, "OM"      ) == 0)  pd->om       = atof(val);
         else if (strcmp(param, "OMDOT"   ) == 0)  pd->omdot    = atof(val);
-        else if (strcmp(param, "BIGOM"   ) == 0)  pd->bigom    = atof(err);
+        else if (strcmp(param, "BIGOM"   ) == 0)  pd->bigom    = atof(val);
         else if (strcmp(param, "DIST_A"  ) == 0)  pd->dist_a   = atof(val);
         else if (strcmp(param, "AGE"     ) == 0)  pd->age      = atof(val);
         else if (strcmp(param, "PBDOT"   ) == 0)  pd->pbdot    = atof(val);

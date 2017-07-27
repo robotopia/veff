@@ -149,15 +149,8 @@ int main( int argc, char *argv[] )
     // Print out position and velocity of Earth
     if (verbose)
     {
-        double v_earth_mag = magnitude( &v_earth );
-
-        printf("\nEarth pos (normlised):\n  [%lf, %lf, %lf]\n",
-                rn_earth.x, rn_earth.y, rn_earth.z );
         printf("Earth vel (km/s):\n  [%lf, %lf, %lf]\n",
                 v_earth.x, v_earth.y, v_earth.z );
-        printf("  Total: %lf km/s\n", v_earth_mag );
-        printf("Earth vel (normalised):\n  [%lf, %lf, %lf]\n",
-                vn_earth.x, vn_earth.y, vn_earth.z );
     }
 
     // Collect the needed values from par file
@@ -236,28 +229,28 @@ int main( int argc, char *argv[] )
     if (geogebra)
     {
         printf("\nGeogebra values:\n");
-        printf("  B_a          = %lf\n", pd.a1);
-        printf("  D            = %lf\n", pd.dist);
-        printf("  Dec_{Pulsar} = %lf\n", decjr);
-        printf("  E_{now}      = (%lf, %lf, %lf)\n",
+        printf("  B_a          = %e\n", pd.a1);
+        printf("  D            = %e\n", pd.dist);
+        printf("  Dec_{Pulsar} = %e\n", decjr);
+        printf("  E_{now}      = (%e, %e, %e)\n",
                   rn_earth.x, rn_earth.y, rn_earth.z );
-        printf("  P_b          = %lf\n", pd.pb);
-        printf("  RA_{Pulsar}  = %lf\n", rajr);
-        printf("  T_0          = %lf\n", pd.t0);
-        printf("  ecc          = %lf\n", pd.ecc);
-        printf("  epoch        = %lf\n", epoch);
-        printf("  freq         = %lf\n", freq);
-        printf("  img_{dx}     = %lf\n", ss.dx);
-        printf("  img_{ratio}  = %lf\n", ss.dy/ss.dx);
+        printf("  P_b          = %e\n", pd.pb);
+        printf("  RA_{Pulsar}  = %e\n", rajr);
+        printf("  T_0          = %e\n", pd.t0);
+        printf("  ecc          = %e\n", pd.ecc);
+        printf("  epoch        = %e\n", epoch);
+        printf("  freq         = %e\n", freq);
+        printf("  img_{dx}     = %e\n", ss.dx);
+        printf("  img_{ratio}  = %e\n", ss.dy/ss.dx);
         printf("  img_w        = %.0lf\n", (ss.max_x-ss.min_x)/ss.dx);
-        printf("  sini         = %lf\n", pd.sini);
-        printf("  v_{E,x}      = %lf\n", v_earth.x);
-        printf("  v_{E,y}      = %lf\n", v_earth.y);
-        printf("  v_{E,z}      = %lf\n", v_earth.z);
-        printf("  v_{μ⟂,Dec}   = %lf\n", tvdec);
-        printf("  v_{μ⟂,RA}    = %lf\n", tvra);
-        printf("  Ω            = %lf\n", pd.bigom);
-        printf("  ω            = %lf\n", pd.om);
+        printf("  sini         = %e\n", pd.sini);
+        printf("  v_{E,x}      = %e\n", v_earth.x);
+        printf("  v_{E,y}      = %e\n", v_earth.y);
+        printf("  v_{E,z}      = %e\n", v_earth.z);
+        printf("  v_{μ⟂,Dec}   = %e\n", tvdec);
+        printf("  v_{μ⟂,RA}    = %e\n", tvra);
+        printf("  Ω            = %e\n", pd.bigom);
+        printf("  ω            = %e\n", pd.om);
     }
 
     // Free up memory
