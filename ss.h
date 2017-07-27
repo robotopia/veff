@@ -2,8 +2,9 @@
 #define SS_H
 
 // Secondary spectrum
-struct ss {
+struct sec_spect {
     double **data;
+    char   dat_filename[100];
     int    x_orig;
     int    y_orig;
     double dx, dy;

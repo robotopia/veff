@@ -4,6 +4,7 @@
 #include <string.h>
 #include <getopt.h>
 #include <gsl/gsl_poly.h>
+#include "ss.h"
 
 typedef struct output_parameters_t {
     char   dat_small_filename[110];
@@ -14,19 +15,6 @@ typedef struct output_parameters_t {
     int    display_dB;
     double best_a;
 } output_parameters;
-
-typedef struct input_parameters_t {
-    char   dat_filename[100];
-    int    x_orig, y_orig;
-    double dx;
-    double dy;
-    double min_x, max_x;
-    double min_y, max_y;
-    double mask_o, mask_x, mask_y;
-    double mask_ox, mask_oy;
-    int    max_t;
-    int    is_dB;
-} input_parameters;
 
 // Usage function
 void usage()
@@ -69,7 +57,7 @@ void distparab(double x, double y, double a, double *dx, double *dy)
   *dy = yp - y;
 }
 
-void write_gnuplot_script( FILE *f, input_parameters *ip, output_parameters *op )
+void write_gnuplot_script( FILE *f, struct sec_spect *ss, output_parameters *op )
 {
     // Write gnuplot script
     fprintf(f, "print \"Running gnuplot script...\"\n");
@@ -91,8 +79,8 @@ void write_gnuplot_script( FILE *f, input_parameters *ip, output_parameters *op 
     fprintf(f, "set samples 10000\n");
     fprintf(f, "unset xlabel\n");
     fprintf(f, "unset ylabel\n");
-    fprintf(f, "set xrange [%lf:%lf]\n", ip->min_x, ip->max_x);
-    fprintf(f, "set yrange [%lf:%lf]\n", ip->min_y, ip->max_y);
+    fprintf(f, "set xrange [%lf:%lf]\n", ss->min_x, ss->max_x);
+    fprintf(f, "set yrange [%lf:%lf]\n", ss->min_y, ss->max_y);
     fprintf(f, "set cbrange [%f:%f]\n", -60.0, -38.0);
     fprintf(f, "set xlabel \"Doppler frequency (mHz)\"\n");
     fprintf(f, "set ylabel \"Delay (us)\"\n");
@@ -100,16 +88,16 @@ void write_gnuplot_script( FILE *f, input_parameters *ip, output_parameters *op 
     fprintf(f, "set parametric\n");
     fprintf(f, "set dummy t\n");
     fprintf(f, "set trange [-pi:pi]\n");
-    fprintf(f, "myx(t) = (t+pi)/(2*pi) * %lf + %lf\n", ip->max_x - ip->min_x, ip->min_x);
-    fprintf(f, "myy(t) = (t+pi)/(2*pi) * %lf + %lf\n", ip->max_y - ip->min_y, ip->min_y);
+    fprintf(f, "myx(t) = (t+pi)/(2*pi) * %lf + %lf\n", ss->max_x - ss->min_x, ss->min_x);
+    fprintf(f, "myy(t) = (t+pi)/(2*pi) * %lf + %lf\n", ss->max_y - ss->min_y, ss->min_y);
     fprintf(f, "best_a = %lf\n", op->best_a);
     fprintf(f, "plot './%s' using (($1-%d)*%f):(($2-%d)*%f):3 with image notitle, \\\n",
-                ip->dat_filename, ip->x_orig, ip->dx, ip->y_orig, ip->dy);
+                ss->dat_filename, ss->x_orig, ss->dx, ss->y_orig, ss->dy);
     fprintf(f, "     myx(t),best_a*(myx(t))**2 w l notitle lc rgb 'white', \\\n");
-    fprintf(f, "     %lf*sin(t),%lf*cos(t) w l notitle lc rgb 'green', \\\n", ip->mask_ox, ip->mask_oy);
-    fprintf(f, "     myx(t), %lf w l notitle lc rgb 'green', \\\n", ip->mask_y);
-    fprintf(f, "     %lf, myy(t) w l notitle lc rgb 'green', \\\n", -ip->mask_x);
-    fprintf(f, "     %lf, myy(t) w l notitle lc rgb 'green'\n\n", ip->mask_x);
+    fprintf(f, "     %lf*sin(t),%lf*cos(t) w l notitle lc rgb 'green', \\\n", ss->mask_ox, ss->mask_oy);
+    fprintf(f, "     myx(t), %lf w l notitle lc rgb 'green', \\\n", ss->mask_y);
+    fprintf(f, "     %lf, myy(t) w l notitle lc rgb 'green', \\\n", -ss->mask_x);
+    fprintf(f, "     %lf, myy(t) w l notitle lc rgb 'green'\n\n", ss->mask_x);
 }
 
 /********
@@ -129,24 +117,24 @@ int main( int argc, char *argv[] )
     int i,j;
 
     // Get values from input file
-    input_parameters ip;
+    struct sec_spect ss;
     output_parameters op;
 
     // Set defaults for input parameters
-    sprintf(ip.dat_filename, "ss.out");
-    ip.x_orig = 0;
-    ip.y_orig = 0;
-    ip.dx = 1.0;
-    ip.dy = 1.0;
-    ip.min_x = -20.0;
-    ip.max_x = -20.0;
-    ip.min_y = 0.0;
-    ip.max_y = 20.0;
-    ip.mask_o = 20.0;
-    ip.mask_x = 8.0;
-    ip.mask_y = 8.0;
-    ip.max_t = 5;
-    ip.is_dB = 0;
+    sprintf(ss.dat_filename, "ss.out");
+    ss.x_orig = 0;
+    ss.y_orig = 0;
+    ss.dx = 1.0;
+    ss.dy = 1.0;
+    ss.min_x = -20.0;
+    ss.max_x = -20.0;
+    ss.min_y = 0.0;
+    ss.max_y = 20.0;
+    ss.mask_o = 20.0;
+    ss.mask_x = 8.0;
+    ss.mask_y = 8.0;
+    ss.max_t = 5;
+    ss.is_dB = 0;
 
     // Parse options
 
@@ -183,49 +171,49 @@ int main( int argc, char *argv[] )
         switch (c)
         {
             case 'd':
-                ip.dx = atof(optarg);
+                ss.dx = atof(optarg);
                 break;
             case 'D':
-                ip.dy = atof(optarg);
+                ss.dy = atof(optarg);
                 break;
             case 'h':
                 usage();
                 exit(0);
                 break;
             case 'k':
-                ip.mask_o = atof(optarg);
+                ss.mask_o = atof(optarg);
                 break;
             case 'L':
-                ip.is_dB = 1;
+                ss.is_dB = 1;
                 break;
             case 'm':
-                ip.mask_x = atof(optarg);
+                ss.mask_x = atof(optarg);
                 break;
             case 'M':
-                ip.mask_y = atof(optarg);
+                ss.mask_y = atof(optarg);
                 break;
             case 'o':
-                ip.x_orig = atof(optarg);
+                ss.x_orig = atof(optarg);
                 break;
             case 'O':
-                ip.y_orig = atof(optarg);
+                ss.y_orig = atof(optarg);
                 break;
             case 's':
-                sprintf(ip.dat_filename, optarg);
+                sprintf(ss.dat_filename, optarg);
             case 'T':
-                ip.max_t = atof(optarg);
+                ss.max_t = atof(optarg);
                 break;
             case 'x':
-                ip.min_x = atof(optarg);
+                ss.min_x = atof(optarg);
                 break;
             case 'X':
-                ip.max_x = atof(optarg);
+                ss.max_x = atof(optarg);
                 break;
             case 'y':
-                ip.min_y = atof(optarg);
+                ss.min_y = atof(optarg);
                 break;
             case 'Y':
-                ip.max_y = atof(optarg);
+                ss.max_y = atof(optarg);
                 break;
             case '?':
                 break;
@@ -237,30 +225,30 @@ int main( int argc, char *argv[] )
     }
 
     // Check: min_y >= 0
-    if (ip.min_y < 0.0)  ip.min_y = 0.0;
+    if (ss.min_y < 0.0)  ss.min_y = 0.0;
 
     // Check that max's are more than min's
-    if ((ip.max_x < ip.min_x) || (ip.max_y < ip.min_y))
+    if ((ss.max_x < ss.min_x) || (ss.max_y < ss.min_y))
     {
         fprintf(stderr,"error: minimum values cannot be greater than maximum values\n");
         exit(1);
     }
 
     // Convert mask_o to an ellipse with correct units
-    ip.mask_ox = ip.mask_o * ip.dx;
-    ip.mask_oy = ip.mask_o * ip.dy;
+    ss.mask_ox = ss.mask_o * ss.dx;
+    ss.mask_oy = ss.mask_o * ss.dy;
 
     // Round mask to pixel boundary
-    ip.mask_x = floor(ip.mask_x) + 0.5;
-    ip.mask_y = floor(ip.mask_y) + 0.5;
+    ss.mask_x = floor(ss.mask_x) + 0.5;
+    ss.mask_y = floor(ss.mask_y) + 0.5;
 
     // First, write out file containing only those data to be considered
     // Open the original file for reading (fr), and a file for writing (fw)
-    sprintf(op.dat_small_filename, "%s.small", ip.dat_filename);
-    FILE *fr = fopen(ip.dat_filename, "r");
+    sprintf(op.dat_small_filename, "%s.small", ss.dat_filename);
+    FILE *fr = fopen(ss.dat_filename, "r");
     if (!fr)
     {
-        fprintf(stderr,"error: Could not open file '%s'\n", ip.dat_filename);
+        fprintf(stderr,"error: Could not open file '%s'\n", ss.dat_filename);
         exit(EXIT_FAILURE);
     }
     FILE *fw = fopen(op.dat_small_filename, "w");
@@ -284,8 +272,8 @@ int main( int argc, char *argv[] )
         fscanf(fr, "%lf %lf %lf", &x, &y, &val);
 
         // Convert pixel numbers to correct units
-        x = (x - (double)ip.x_orig) * ip.dx;
-        y = (y - (double)ip.y_orig) * ip.dy;
+        x = (x - (double)ss.x_orig) * ss.dx;
+        y = (y - (double)ss.y_orig) * ss.dy;
 
         if (is_first_time)
         {
@@ -301,8 +289,8 @@ int main( int argc, char *argv[] )
         if (y < temp_min_y)  temp_min_y = y;
 
         // If values are within range, write out to "reduced" file
-        if ((x >= ip.min_x) && (x <= ip.max_x) &&
-                (y >= ip.min_y) && (y <= ip.max_y))
+        if ((x >= ss.min_x) && (x <= ss.max_x) &&
+                (y >= ss.min_y) && (y <= ss.max_y))
         {
             fprintf(fw, "%lf %lf %le\n", x, y, val);
             n_pixels++;
@@ -314,65 +302,65 @@ int main( int argc, char *argv[] )
     fclose(fw);
 
     // If specified x and y limits are outside of actual data, trim them to fit actual data
-    if (ip.max_x > temp_max_x)  ip.max_x = temp_max_x;
-    if (ip.min_x < temp_min_x)  ip.min_x = temp_min_x;
-    if (ip.max_y > temp_max_y)  ip.max_y = temp_max_y;
-    if (ip.min_y < temp_min_y)  ip.min_y = temp_min_y;
+    if (ss.max_x > temp_max_x)  ss.max_x = temp_max_x;
+    if (ss.min_x < temp_min_x)  ss.min_x = temp_min_x;
+    if (ss.max_y > temp_max_y)  ss.max_y = temp_max_y;
+    if (ss.min_y < temp_min_y)  ss.min_y = temp_min_y;
 
     // Check that mask values are all positive
-    if ((ip.mask_o < 0.0) || (ip.mask_x < 0.0) || (ip.mask_y < 0.0))
+    if ((ss.mask_o < 0.0) || (ss.mask_x < 0.0) || (ss.mask_y < 0.0))
     {
         fprintf(stderr, "error: mask values must be > 0\n");
         exit(EXIT_FAILURE);
     }
 
     // Check that max_t is >= 1
-    if (ip.max_t < 1)
+    if (ss.max_t < 1)
     {
         fprintf(stderr, "error: max_t value must be >= 1\n");
         exit(EXIT_FAILURE);
     }
 
     // Convert mask_x and mask_y to correct units;
-    ip.mask_x *= ip.dx;
-    ip.mask_y *= ip.dy;
+    ss.mask_x *= ss.dx;
+    ss.mask_y *= ss.dy;
 
     // Find the minimum and maximum unmasked pixels in both x and y directions
     double inner_x, outer_x;
     double inner_y, outer_y;
 
     // For the x's...
-    if (ip.min_x > 0)
+    if (ss.min_x > 0)
     {
-        inner_x = (ip.min_x > ip.mask_x ? ip.min_x : ip.mask_x);
-        outer_x = ip.max_x;
+        inner_x = (ss.min_x > ss.mask_x ? ss.min_x : ss.mask_x);
+        outer_x = ss.max_x;
     }
-    else if (ip.max_x < 0)
+    else if (ss.max_x < 0)
     {
-        inner_x = (fabs(ip.max_x) > ip.mask_x ? fabs(ip.max_x) : ip.mask_x);
-        outer_x = fabs(ip.min_x);
+        inner_x = (fabs(ss.max_x) > ss.mask_x ? fabs(ss.max_x) : ss.mask_x);
+        outer_x = fabs(ss.min_x);
     }
     else
     {
-        inner_x = ip.mask_x;
-        outer_x = fabs(ip.min_x) > ip.max_x ? fabs(ip.min_x) : ip.max_x;
+        inner_x = ss.mask_x;
+        outer_x = fabs(ss.min_x) > ss.max_x ? fabs(ss.min_x) : ss.max_x;
     }
 
     // ...and for the y's
-    if (ip.min_y > 0)
+    if (ss.min_y > 0)
     {
-        inner_y = (ip.min_y > ip.mask_y ? ip.min_y : ip.mask_y);
-        outer_y = ip.max_y;
+        inner_y = (ss.min_y > ss.mask_y ? ss.min_y : ss.mask_y);
+        outer_y = ss.max_y;
     }
-    else if (ip.max_y < 0)
+    else if (ss.max_y < 0)
     {
-        inner_y = (fabs(ip.max_y) > ip.mask_y ? fabs(ip.max_y) : ip.mask_y);
-        outer_y = fabs(ip.min_y);
+        inner_y = (fabs(ss.max_y) > ss.mask_y ? fabs(ss.max_y) : ss.mask_y);
+        outer_y = fabs(ss.min_y);
     }
     else
     {
-        inner_y = ip.mask_y;
-        outer_y = fabs(ip.min_y) > ip.max_y ? fabs(ip.min_y) : ip.max_y;
+        inner_y = ss.mask_y;
+        outer_y = fabs(ss.min_y) > ss.max_y ? fabs(ss.min_y) : ss.max_y;
     }
 
     // Add a fudge factor, to avoid parabolas with only a minimal number of pixels
@@ -380,8 +368,8 @@ int main( int argc, char *argv[] )
     inner_x *= sqrt(2.0);
 
     // Set up array of trial 'a' values
-    double step_x = ip.dx / 10.0;
-    double step_y = ip.dy / 10.0;
+    double step_x = ss.dx / 10.0;
+    double step_y = ss.dy / 10.0;
     int n_as_x = (int)((outer_x - inner_x) / step_x) + 1;
     int n_as_y = (int)((outer_y - inner_y) / step_y) + 1;
     int n_as = n_as_x + n_as_y + 2; // +2 just a safety buffer in case something goes wrong with the int casting above
@@ -406,7 +394,7 @@ int main( int argc, char *argv[] )
     }
 
     // Set up array of trial 't' (thickness) values
-    int n_ts = ip.max_t;
+    int n_ts = ss.max_t;
     double trial_ts[n_ts];
     for (i = 0; i < n_ts; i++)
         trial_ts[i] = (double)(i+1);
@@ -458,15 +446,15 @@ int main( int argc, char *argv[] )
         fscanf(f, "%lf %lf %lf\n", &x, &y, &val);
 
         // Convert values to real, not-log powers, if necessary
-        if (ip.is_dB)  val = pow(10.0,val/10.0);
+        if (ss.is_dB)  val = pow(10.0,val/10.0);
 
-        if (fabs(x) <= ip.mask_x) // don't count pixels too close to y-axis
+        if (fabs(x) <= ss.mask_x) // don't count pixels too close to y-axis
             continue;
 
-        if (fabs(y) <= ip.mask_y) // don't count pixels too close to x-axis
+        if (fabs(y) <= ss.mask_y) // don't count pixels too close to x-axis
             continue;
 
-        orig_dist = hypot(x/ip.mask_ox, y/ip.mask_oy);
+        orig_dist = hypot(x/ss.mask_ox, y/ss.mask_oy);
         if (orig_dist <= 1) // don't count pixels too close to origin
             continue;
 
@@ -475,9 +463,9 @@ int main( int argc, char *argv[] )
             a = trial_as[i];
 
             distparab(x, y, a, &parab_dist_x, &parab_dist_y); // Calculate distance away from parabola
-            dist_pixels = hypot(parab_dist_x/ip.dx, parab_dist_y/ip.dy);
+            dist_pixels = hypot(parab_dist_x/ss.dx, parab_dist_y/ss.dy);
 
-            for (j = 0; j < ip.max_t; j++)
+            for (j = 0; j < ss.max_t; j++)
             {
                 t = trial_ts[j];
 
@@ -515,10 +503,10 @@ int main( int argc, char *argv[] )
     // OUTPUT RESULTS //
     ////////////////////
 
-    sprintf(op.png_filename,       "%s.png",       ip.dat_filename);
-    sprintf(op.hough_filename,     "%s.hough.dat", ip.dat_filename);
-    sprintf(op.hough_png_filename, "%s.hough.png", ip.dat_filename);
-    sprintf(op.gpi_filename,       "%s.gpi",       ip.dat_filename);
+    sprintf(op.png_filename,       "%s.png",       ss.dat_filename);
+    sprintf(op.hough_filename,     "%s.hough.dat", ss.dat_filename);
+    sprintf(op.hough_png_filename, "%s.hough.png", ss.dat_filename);
+    sprintf(op.gpi_filename,       "%s.gpi",       ss.dat_filename);
 
     // Save Hough to file
     f = fopen(op.hough_filename, "w");
@@ -528,7 +516,7 @@ int main( int argc, char *argv[] )
         {
             if (i == 0)
                 fprintf(f,"\n");
-            if (ip.is_dB)
+            if (ss.is_dB)
                 hough[i][j] = 10.0*log10(hough[i][j]);
             if (!isnan(hough[i][j]))
                 fprintf(f, "%e %f %e %d\n", trial_as[i], trial_ts[j], hough[i][j], pixelcount[i][j]);
@@ -538,6 +526,6 @@ int main( int argc, char *argv[] )
     // Write out gnuplot script
     f = fopen(op.gpi_filename, "w");
     printf("Writing gnuplot script...\n");
-    write_gnuplot_script(f, &ip, &op);
+    write_gnuplot_script(f, &ss, &op);
     fclose(f);
 }
