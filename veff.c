@@ -28,6 +28,33 @@ void usage()
     printf("\n");
 }
 
+void get_earth_state( double epoch, char *ephemfile, vec *r_earth, vec *v_earth )
+/* Extracts the Earth's position (km) and velocity (km/s) in J2000 coordinates
+ * from the supplied planetary ephemeris.
+ */
+{
+    // Open ephemeris file
+    double jd = epoch + 2400000.5;
+    SpiceDouble et = (jd - j2000_c() ) * spd_c();
+    SpiceDouble state[6];
+    SpiceDouble lt;
+    furnsh_c( ephemfile );
+    spkezr_c( "earth", et, "j2000", "NONE", "solar system barycenter",
+              state, &lt );
+    unload_c( ephemfile );
+
+    // Put answer into "output" variables
+    r_earth->x = state[0];   v_earth->x = state[3];
+    r_earth->y = state[1];   v_earth->y = state[4];
+    r_earth->z = state[2];   v_earth->z = state[5];
+}
+
+
+//void parseoptions( int argc, char *argv[] )
+//{
+//}
+
+
 int main( int argc, char *argv[] )
 {
 
@@ -125,24 +152,13 @@ int main( int argc, char *argv[] )
         printf( "  Par file  = %s\n",  par );
     }
 
-    // Open ephemeris file
-    double jd = epoch + 2400000.5;
-    SpiceDouble et = (jd - j2000_c() ) * spd_c();
-    SpiceDouble state[6];
-    SpiceDouble lt;
-    furnsh_c( ephemfile );
-    spkezr_c( "earth", et, "j2000", "NONE", "solar system barycenter",
-              state, &lt );
-    unload_c( ephemfile );
+    // Get Earth's position and velocity
+    vec r_earth; // position vector (kms)
+    vec v_earth; // velocity vector (km/s)
+    get_earth_state( epoch, ephemfile, &r_earth, &v_earth );
 
     // Normalise the position and velocity vectors
-    vec r_earth, rn_earth; // position vector (kms)
-    vec v_earth, vn_earth; // velocity vector (km/s)
-
-    r_earth.x = state[0];   v_earth.x = state[3];
-    r_earth.y = state[1];   v_earth.y = state[4];
-    r_earth.z = state[2];   v_earth.z = state[5];
-
+    vec rn_earth, vn_earth;
     normalise( &v_earth, &vn_earth );
     normalise( &r_earth, &rn_earth );
 

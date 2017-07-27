@@ -22,22 +22,16 @@ void usage()
     printf( "usage: parabfit [OPTIONS] DATAFILE\n" );
     printf( "\n" );
     printf( "  OPTIONS\n" );
-    printf( "    --ssdata=PATH The file containing the secondary spectrum data. Should be a text file with three\n" );
-    printf( "                  columns of number: \"xpixel ypixel value [default = ss.out]\"\n" );
-    printf( "    --xorig=N     The x value (in units matching DATAFILE) corresponding to the origin [default = 0]\n" );
-    printf( "    --yorig=N     The y value (in units matching DATAFILE) corresponding to the origin [default = 0]\n" );
-    printf( "    --dx=N        The resolution of the x axis in mHz [default = 1.0]\n" );
-    printf( "    --dy=N        The resolution of the y axis in us  [default = 1.0]\n" );
-    printf( "    --xmin=N      The minimum x to consider (mHz)  [default = -20.0]\n" );
-    printf( "    --xmax=N      The maximum x to consider (mHz)  [default =  20.0]\n" );
-    printf( "    --ymin=N      The minimum y to consider (us)   [default =   0.0] (values < 0 will default to 0)\n" );
-    printf( "    --ymax=N      The maximum y to consider (us)   [default =  20.0]\n" );
-    printf( "    --omask=N     Data points <= this many pixels from the origin will be masked   [default =  20.0]\n" );
-    printf( "    --xmask=N     Data points <= this many pixels from the x-axis will be masked   [default =  8.0]\n" );
-    printf( "    --ymask=N     Data points <= this many pixels from the y-axis will be masked   [default =  8.0]\n" );
-    printf( "    --tmax=N      The largest parabola thickness to consider (integer) [default = 5]\n" );
-    printf( "    --dB          Input values are in dB units [default = off]\n" );
-    printf( "    -h, --help    Display this help and exit\n" );
+    printf( "    --ssdata=PATH   The file containing the secondary spectrum data. Should be a text file with three\n" );
+    printf( "                    columns of number: \"xpixel ypixel value [default = ss.out]\"\n" );
+    printf( "    --orig=X,Y      The X,Y values (in units matching DATAFILE) corresponding to the origin [default = 0,0]\n" );
+    printf( "    --res=X,Y       The resolution of the x/y axis in mHz/us [default = (1.0, 1.0)]\n" );
+    printf( "    --xrange=LO,HI  The min/max X to consider (mHz)  [default = (-20.0,20.0)]\n" );
+    printf( "    --yrange=LO,HI  The min/max Y to consider (us)   [default = (0.0,20.0)] (values < - will default to 0)\n" );
+    printf( "    --mask=O,X,Y    Data points <= this many pixels from the origin/x-axis/y-axis will be masked   [default = (20.0, 8.0, 8.0)]\n" );
+    printf( "    --tmax=N        The largest parabola thickness to consider (integer) [default = 5]\n" );
+    printf( "    --dB            Input values are in dB units [default = off]\n" );
+    printf( "    -h, --help      Display this help and exit\n" );
     printf( "\n" );
 }
 
@@ -57,7 +51,7 @@ void distparab(double x, double y, double a, double *dx, double *dy)
   *dy = yp - y;
 }
 
-void write_gnuplot_script( FILE *f, struct sec_spect *ss, output_parameters *op )
+void write_ss_gnuplot_script( FILE *f, struct sec_spect *ss, output_parameters *op )
 {
     // Write gnuplot script
     fprintf(f, "print \"Running gnuplot script...\"\n");
@@ -138,82 +132,89 @@ int main( int argc, char *argv[] )
 
     // Parse options
 
+    int nscan; // Number of items scanned in with sscanf
     int c;
     while (1)
     {
 
         static struct option long_options[] = {
             {"ssdata",  required_argument, NULL, 's'},
-            {"xorig",   required_argument, NULL, 'o'},
-            {"yorig",   required_argument, NULL, 'O'},
-            {"dx",      required_argument, NULL, 'd'},
-            {"dy",      required_argument, NULL, 'D'},
-            {"xmin",    required_argument, NULL, 'x'},
-            {"xmax",    required_argument, NULL, 'X'},
-            {"ymin",    required_argument, NULL, 'y'},
-            {"ymax",    required_argument, NULL, 'Y'},
-            {"omask",   required_argument, NULL, 'k'},
-            {"xmask",   required_argument, NULL, 'm'},
-            {"ymask",   required_argument, NULL, 'M'},
-            {"tmax",    required_argument, NULL, 'T'},
-            {"dB",      no_argument,       NULL, 'L'},
+            {"orig",    required_argument, NULL, 'o'},
+            {"res",     required_argument, NULL, 'r'},
+            {"xrange",  required_argument, NULL, 'x'},
+            {"yrange",  required_argument, NULL, 'y'},
+            {"mask",    required_argument, NULL, 'm'},
+            {"tmax",    required_argument, NULL, 't'},
+            {"dB",      no_argument,       NULL, 'l'},
             {"help",    no_argument,       NULL, 'h'},
             {0, 0, 0, 0}
         };
 
         int option_index = 0;
 
-        c = getopt_long(argc, argv, "d:D:hk:Lm:M:o:O:s:T:x:X:y:Y:", long_options, &option_index);
+        c = getopt_long(argc, argv, "hlm:o:r:s:t:x:y:", long_options, &option_index);
 
         if (c == -1)
             break;
 
         switch (c)
         {
-            case 'd':
-                ss.dx = atof(optarg);
-                break;
-            case 'D':
-                ss.dy = atof(optarg);
-                break;
             case 'h':
                 usage();
                 exit(0);
                 break;
-            case 'k':
-                ss.mask_o = atof(optarg);
-                break;
-            case 'L':
+            case 'l':
                 ss.is_dB = 1;
                 break;
             case 'm':
-                ss.mask_x = atof(optarg);
-                break;
-            case 'M':
-                ss.mask_y = atof(optarg);
+                nscan = sscanf(optarg, "%lf,%lf,%lf", &ss.mask_o, &ss.mask_x, &ss.mask_y);
+                if (nscan != 3)
+                {
+                    fprintf(stderr, "error: couldn't parse --mask=%s as O,X,Y\n", optarg);
+                    usage();
+                    exit(EXIT_FAILURE);
+                }
                 break;
             case 'o':
-                ss.x_orig = atof(optarg);
+                nscan = sscanf(optarg, "%lf,%lf", &ss.x_orig, &ss.y_orig);
+                if (nscan != 2)
+                {
+                    fprintf(stderr, "error: couldn't parse --orig=%s as X,Y\n", optarg);
+                    usage();
+                    exit(EXIT_FAILURE);
+                }
                 break;
-            case 'O':
-                ss.y_orig = atof(optarg);
+            case 'r':
+                nscan = sscanf(optarg, "%lf,%lf", &ss.dx, &ss.dy);
+                if (nscan != 2)
+                {
+                    fprintf(stderr, "error: couldn't parse --res=%s as X,Y\n", optarg);
+                    usage();
+                    exit(EXIT_FAILURE);
+                }
                 break;
             case 's':
                 sprintf(ss.dat_filename, optarg);
-            case 'T':
+            case 't':
                 ss.max_t = atof(optarg);
                 break;
             case 'x':
-                ss.min_x = atof(optarg);
-                break;
-            case 'X':
-                ss.max_x = atof(optarg);
+                nscan = sscanf(optarg, "%lf,%lf", &ss.min_x, &ss.max_x);
+                if (nscan != 2)
+                {
+                    fprintf(stderr, "error: couldn't parse --xrange=%s as LO,HI\n", optarg);
+                    usage();
+                    exit(EXIT_FAILURE);
+                }
                 break;
             case 'y':
-                ss.min_y = atof(optarg);
-                break;
-            case 'Y':
-                ss.max_y = atof(optarg);
+                nscan = sscanf(optarg, "%lf,%lf", &ss.min_y, &ss.max_y);
+                if (nscan != 2)
+                {
+                    fprintf(stderr, "error: couldn't parse --yrange=%s as LO,HI\n", optarg);
+                    usage();
+                    exit(EXIT_FAILURE);
+                }
                 break;
             case '?':
                 break;
@@ -526,6 +527,6 @@ int main( int argc, char *argv[] )
     // Write out gnuplot script
     f = fopen(op.gpi_filename, "w");
     printf("Writing gnuplot script...\n");
-    write_gnuplot_script(f, &ss, &op);
+    write_ss_gnuplot_script(f, &ss, &op);
     fclose(f);
 }
