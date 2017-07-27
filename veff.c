@@ -6,6 +6,8 @@
 #include "SpiceUsr.h"
 #include "par.h"
 #include "vec.h"
+#include "ss.h"
+#include "gg.h"
 
 #define PI          (4*atan(1.0))
 #define DEG2RAD(x)  ((x)*PI/180.0)
@@ -209,5 +211,6 @@ int main( int argc, char *argv[] )
     free( ephemfile );
     free_par( &pd );
 
+    write_gg_javascript(stdout);
     return 0;
 }

@@ -8,7 +8,7 @@ TARGETS = veff parabfit bin2asc
 
 all: $(TARGETS)
 
-veff: veff.c vec.o par.o
+veff: veff.c vec.o par.o gg.o
 	gcc -Wall -Wextra -fsanitize=address -o $@ $^ -I$(CSPICE_DIR)/include -L$(CSPICE_DIR)/lib -lasan -lcspice -lm
 
 test: 0437.par
