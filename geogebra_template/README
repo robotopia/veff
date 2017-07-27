@@ -1,5 +1,3 @@
-When I get up to the point of inputing parameters from the "veff" program into geogebra, I want it to be easy to know where to put them.
-This README is just a memo to myself so that I know what needs to go where.
 
   1. The epoch in question
          epoch = [user defined] = "__EPOCH__"

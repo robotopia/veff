@@ -66,6 +66,19 @@ void read_par( char *filename, struct pardata *pd )
         exit(EXIT_FAILURE);
     }
 
+    // Firstly, initialise all pointers to NULL
+    pd->psrj    = NULL;
+    pd->name    = NULL;
+    pd->raj     = NULL;
+    pd->decj    = NULL;
+    pd->survey  = NULL;
+    pd->binary  = NULL;
+    pd->assoc   = NULL;
+    pd->bincomp = NULL;
+    pd->type    = NULL;
+    pd->osurvey = NULL;
+    pd->units   = NULL;
+
     // Open the par file
     FILE *fpar = open_par( filename );
 
@@ -109,6 +122,7 @@ void read_par( char *filename, struct pardata *pd )
             else if (strcmp(param, "T0"     ) == 0) pd->t0_err     = atof(err);
             else if (strcmp(param, "OM"     ) == 0) pd->om_err     = atof(err);
             else if (strcmp(param, "OMDOT"  ) == 0) pd->omdot_err  = atof(err);
+            else if (strcmp(param, "BIGOM"  ) == 0) pd->bigom_err  = atof(err);
             else if (strcmp(param, "DIST_A" ) == 0) pd->dist_a_err = atof(err);
             else if (strcmp(param, "PBDOT"  ) == 0) pd->pbdot_err  = atof(err);
             else if (strcmp(param, "SPINDX" ) == 0) pd->spindx_err = atof(err);
@@ -170,6 +184,7 @@ void read_par( char *filename, struct pardata *pd )
         else if (strcmp(param, "T0"      ) == 0)  pd->t0       = atof(val);
         else if (strcmp(param, "OM"      ) == 0)  pd->om       = atof(val);
         else if (strcmp(param, "OMDOT"   ) == 0)  pd->omdot    = atof(val);
+        else if (strcmp(param, "BIGOM"   ) == 0)  pd->bigom    = atof(err);
         else if (strcmp(param, "DIST_A"  ) == 0)  pd->dist_a   = atof(val);
         else if (strcmp(param, "AGE"     ) == 0)  pd->age      = atof(val);
         else if (strcmp(param, "PBDOT"   ) == 0)  pd->pbdot    = atof(val);

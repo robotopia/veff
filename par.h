@@ -68,6 +68,8 @@ struct pardata {
     double om_err;
     double omdot;
     double omdot_err;
+    double bigom;
+    double bigom_err;
     double dist_a;
     double dist_a_err;
     char   *assoc;
