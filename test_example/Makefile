@@ -6,3 +6,6 @@ parabfit: ss.out
 
 ss_test: ss_test.c ../ss.o
 	gcc -o $@ $^ -lm
+
+hg_test: hg_test.c ../ss.o ../hough.o
+	gcc -o $@ $^ -lm

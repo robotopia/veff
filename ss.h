@@ -3,6 +3,9 @@
 
 #include <stdio.h>
 
+#define SS_BINARY  0
+#define SS_ASCII   1
+
 // Secondary spectrum
 struct sec_spect {
     double x_orig, y_orig;            // The x/y coordinates of the origin (in "index" units)

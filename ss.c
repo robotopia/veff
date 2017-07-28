@@ -56,7 +56,7 @@ void ss_read( FILE *f, struct sec_spect *ss, int filetype )
 
     switch (filetype)
     {
-        case 0: // binary dump of sec_spect struct
+        case SS_BINARY: // binary dump of sec_spect struct
             fread( &ss->x_orig, sizeof(double), 1, f );
             fread( &ss->y_orig, sizeof(double), 1, f );
             fread( &ss->dx,     sizeof(double), 1, f );
@@ -72,7 +72,7 @@ void ss_read( FILE *f, struct sec_spect *ss, int filetype )
             for (i = 0; i < xsize; i++)
                 fread( &ss->data[i], sizeof(double), ysize, f );
             break;
-        case 1: // three-column ASCII [x, y, data]
+        case SS_ASCII: // three-column ASCII [x, y, data]
             // Assumes x and y start counting at 1
             // First, read the whole file to get the last three numbers
             // (= [xsize ysize last_value])
@@ -123,7 +123,7 @@ void ss_write( FILE *f, struct sec_spect *ss, int filetype )
 
     switch (filetype)
     {
-        case 0: // binary dump of sec_spect struct
+        case SS_BINARY: // binary dump of sec_spect struct
             fwrite( &ss->x_orig, sizeof(double), 1, f );
             fwrite( &ss->y_orig, sizeof(double), 1, f );
             fwrite( &ss->dx,     sizeof(double), 1, f );
@@ -138,7 +138,7 @@ void ss_write( FILE *f, struct sec_spect *ss, int filetype )
             for (i = 0; i < ss->xsize; i++)
                 fwrite( ss->data[i], sizeof(double), ss->ysize, f );
             break;
-        case 1: // three-column ASCII [x, y, data]
+        case SS_ASCII: // three-column ASCII [x, y, data]
             // Start x and y counting at 1
             for (x = 0; x < ss->xsize ; x++)
             for (y = 0; y < ss->ysize ; y++)
@@ -194,6 +194,12 @@ void ss_crop( struct sec_spect *old_ss, struct sec_spect *new_ss,
     // Allocate memory
     ss_malloc( new_ss, xmax_idx - xmin_idx + 1,
                        ymax_idx - ymin_idx + 1 );
+
+    // Copy across values
+    int xidx, yidx;
+    for (xidx = xmin_idx; xidx <= xmax_idx; xidx++)
+    for (yidx = ymin_idx; yidx <= ymax_idx; yidx++)
+        new_ss->data[xidx-xmin_idx][yidx-ymin_idx] = old_ss->data[xidx][yidx];
 }
 
 void ss_malloc( struct sec_spect *ss, int xsize, int ysize )
