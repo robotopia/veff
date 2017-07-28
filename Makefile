@@ -14,7 +14,7 @@ veff: veff.c vec.o par.o
 test:
 	$(MAKE) -C test_example
 
-croptest: croptest.c ss.o
+croptest: croptest.c ss.o hough.o
 	gcc -o $@ $^ -lm
 
 parabfit: pf.c

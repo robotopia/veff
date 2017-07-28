@@ -37,8 +37,8 @@ double hg_a_to_idx( struct hough *hg, double a );
 
 void hg_calc_transform( struct hough *hg );
 
-void hg_read( FILE f*, struct hough *hg );
-void hg_write( FILE f*, struct hough *hg );
+void hg_read( FILE *f, struct hough *hg );
+void hg_write( FILE *f, struct hough *hg );
 
 void hg_write_gnuplot( FILE *f, struct hough *hg, char *filename );
 
