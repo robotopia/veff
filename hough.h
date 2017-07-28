@@ -21,8 +21,8 @@ struct hough {
     double y0mask;             //   centered on origin
     double xmask;              // Ignore pixels within this range of y-axis
     double ymask;              // Ignore pixels within this range of x-axis
-    double pxdist;             // Include pixels within this (x-)range of parabola (-1 = ignore)
-    double pydist;             // Include pixels within this (y-)range of parabola (-1 = ignore)
+    double pxdist;             // Include pixels within this (x-)range of parabola (neg = ignore)
+    double pydist;             // Include pixels within this (y-)range of parabola (neg = ignore)
     int    logspace;           // (boolean) Space out points [amin:amax] logarithmically
     int    size;               // Number of points in the Hough Transform
     int    *npixels;           // The number of ss pixels that went into each hough pixel
