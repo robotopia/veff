@@ -7,6 +7,7 @@
 #include "par.h"
 #include "vec.h"
 #include "ss.h"
+#include "hough.h"
 
 #define PI          (4*atan(1.0))
 #define DEG2RAD(x)  ((x)*PI/180.0)
@@ -71,8 +72,7 @@ int main( int argc, char *argv[] )
     /* Just dummy data for now */
     ss.dx = 0.0;
     ss.dy = 0.0;
-    ss.min_x = 0.0;
-    ss.max_x = 0.0;
+    double imgw = 0.0;
 
     // Parse command line options
     if (argc <= 1)
@@ -258,7 +258,7 @@ int main( int argc, char *argv[] )
         printf("  freq         = %e\n", freq);
         printf("  img_{dx}     = %e\n", ss.dx);
         printf("  img_{ratio}  = %e\n", ss.dy/ss.dx);
-        printf("  img_w        = %.0lf\n", (ss.max_x-ss.min_x)/ss.dx);
+        printf("  img_w        = %.0lf\n", imgw);
         printf("  sini         = %e\n", pd.sini);
         printf("  v_{E,x}      = %e\n", v_earth.x);
         printf("  v_{E,y}      = %e\n", v_earth.y);

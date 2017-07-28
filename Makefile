@@ -8,7 +8,7 @@ TARGETS = veff
 
 all: $(TARGETS) croptest
 
-veff: veff.c vec.o par.o
+veff: veff.c vec.o par.o ss.o hough.o
 	gcc -Wall -Wextra -fsanitize=address -o $@ $^ -I$(CSPICE_DIR)/include -L$(CSPICE_DIR)/lib -lasan -lcspice -lm
 
 test:

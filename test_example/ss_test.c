@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "ss.h"
-#include "hough.h"
+#include "../ss.h"
 
 int main()
 {
