@@ -255,6 +255,7 @@ void ss_write_gnuplot( FILE *f, struct sec_spect *ss,
                                     64*sizeof(char)   +
                                      3*sizeof(int)      );
     fprintf( f, "    array=(%d,%d) \\\n", ss->xsize, ss->ysize );
+    fprintf( f, "    scan=yx \\\n" );
     fprintf( f, "    origin=(%lf,%lf) \\\n", xmin, ymin );
     fprintf( f, "    format=\"%%double\" \\\n" );
     fprintf( f, "    dx=%lf dy=%lf \\\n", ss->dx, ss->dy );
