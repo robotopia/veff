@@ -4,15 +4,18 @@ CSPICE_DIR = $(HOME)/src/cspice/cspice
 CC = gcc
 LDFLAGS = -lm
 
-TARGETS = veff parabfit bin2asc
+TARGETS = veff
 
-all: $(TARGETS)
+all: $(TARGETS) croptest
 
 veff: veff.c vec.o par.o
 	gcc -Wall -Wextra -fsanitize=address -o $@ $^ -I$(CSPICE_DIR)/include -L$(CSPICE_DIR)/lib -lasan -lcspice -lm
 
 test:
 	$(MAKE) -C test_example
+
+croptest: croptest.c ss.o
+	gcc -o $@ $^ -lm
 
 parabfit: pf.c
 	gcc -o $@ $< -lm -lgsl -lgslcblas
