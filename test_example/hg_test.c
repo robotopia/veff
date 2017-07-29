@@ -30,7 +30,7 @@ int main()
     // Hough Transform
     struct hough hg;
     hg.ss        = &ss_cropped;
-    hg.quadrant  = HG_Q2;
+    hg.quadrant  = HG_Q2 | HG_Q1;
     hg.amin      = 0.1;
     hg.amax      = 2.0;
     hg.x0mask    = 4.0;
@@ -39,9 +39,8 @@ int main()
     hg.ymask     = 1.4;
     hg.pxdist    = 0.5;
     hg.pydist    = 0.5;
-    hg.logspace  = 1;
+    hg.logspace  = 0;
     hg_malloc( &hg, 1000 );
-
     hg_calc_transform( &hg );
 
     // Write out results

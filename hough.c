@@ -41,7 +41,7 @@ double hg_a_to_idx( struct hough *hg, double a )
         return (double)(hg->size - 1) * log(a / hg->amin) /
                                         log(hg->amax / hg->amin);
     else // linear interpolation
-        return (a - hg->amin) / ((hg->amax - hg->amin)/hg->size);
+        return (a - hg->amin) / ((hg->amax - hg->amin)/(hg->size - 1));
 }
 
 
