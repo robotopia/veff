@@ -101,10 +101,7 @@ void hg_calc_transform( struct hough *hg )
 
         // Ignore pixels closer than "xmask" to the y-axis
         if (fabs(x) < hg->xmask)
-        {
-fprintf(stderr, "(%.2f,N/A) too close to y-axis\n", x);
             continue;
-        }
 
         // Loop over pixels in y-direction
         for (yidx = 0; yidx < ss->ysize; yidx++)
@@ -113,40 +110,22 @@ fprintf(stderr, "(%.2f,N/A) too close to y-axis\n", x);
 
             // Ignore pixels closer than "ymask" to the x-axis
             if (fabs(y) < hg->ymask)
-            {
-fprintf(stderr, "(%.2f,%.2f) too close to x-axis\n", x, y);
                 continue;
-            }
 
             // Ignore pixels in the wrong quadrants
             if (!(hg->quadrant & HG_Q1) && (x > 0.0) && (y > 0.0))
-            {
-fprintf(stderr, "(%.2f,%.2f) in Q1\n", x, y);
                 continue;
-            }
             if (!(hg->quadrant & HG_Q2) && (x < 0.0) && (y > 0.0))
-            {
-fprintf(stderr, "(%.2f,%.2f) in Q2\n", x, y);
                 continue;
-            }
             if (!(hg->quadrant & HG_Q3) && (x < 0.0) && (y < 0.0))
-            {
-fprintf(stderr, "(%.2f,%.2f) in Q3\n", x, y);
                 continue;
-            }
             if (!(hg->quadrant & HG_Q4) && (x > 0.0) && (y < 0.0))
-            {
-fprintf(stderr, "(%.2f,%.2f) in Q4\n", x, y);
                 continue;
-            }
 
             // Ignore pixels too close to the origin
             yn = y / hg->y0mask;
             if (hypot(xn,yn) <= 1.0)
-            {
-fprintf(stderr, "(%.2f,%.2f) too close to origin\n", x, y);
                 continue;
-            }
 
             // Find all sufficiently close parabolas
             double xleft   = x - hg->pxdist;
@@ -163,7 +142,6 @@ fprintf(stderr, "(%.2f,%.2f) too close to origin\n", x, y);
             // Make sure they don't exceed the allowed limits
             int amin_idx = (int) hg_a_to_idx(hg, amin < hg->amin ? hg->amin : amin);
             int amax_idx = (int)(hg_a_to_idx(hg, amax > hg->amax ? hg->amax : amax)+1.0);
-fprintf(stderr, "(%.2f,%.2f) found %d allowed parabolas between a=%lf[%d->%d] and a=%lf[%d->%d]\n", x, y, amax_idx - amin_idx + 1, amin, (int)hg_a_to_idx(hg, amin), amin_idx, amax, (int)(hg_a_to_idx(hg, amax)+1.0), amax_idx);
             for (aidx = amin_idx; aidx <= amax_idx; aidx++)
             {
                 hg->transform[aidx] += ss->data[xidx][yidx];
@@ -226,7 +204,10 @@ void hg_write( FILE *f, struct hough *hg, int filetype )
             break;
         case HG_ASCII:
             for (i = 0; i < hg->size; i++)
-                fprintf( f, "%d %lf\n", hg->npixels[i], hg->transform[i] );
+                fprintf( f, "%lf %lf %d\n",
+                            hg_idx_to_a( hg, (double)i ),
+                            hg->transform[i],
+                            hg->npixels[i] );
             break;
         default:
             fprintf( stderr, "error: unrecognised hough output format\n" );
@@ -242,13 +223,15 @@ void hg_write_gnuplot( FILE *f, struct hough *hg, char *filename )
         fprintf( f, "set logscale x\n\n" );
 
     fprintf( f, "set xlabel \"Curvature, η\"\n" );
-    fprintf( f, "set ylabel \"Mean dB\"\n" );
+    if (hg->ss->is_dB)
+        fprintf( f, "set ylabel \"Mean dB\"\n" );
+    else
+        fprintf( f, "set ylabel \"Mean amplitude\"\n" );
+    fprintf( f, "set xrange [*:*] noextend\n\n" );
 
-    fprintf( f, "plot '%s' binary \\\n", filename );
-    fprintf( f, "    skip=%d \\\n", sizeof(struct sec_spect*) +
-                                    3*sizeof(int) +
-                                    8*sizeof(double) );
-    fprintf( f, "    array=%d:%d \\\n", hg->size, hg->size );
-    fprintf( f, "    format=\"%%int%%double\" \\\n" );
-    fprintf( f, "    using ($2/$1) with lines notitle\n" );
+    fprintf( f, "plot '%s' ", filename );
+    fprintf( f, "using 1:($2/$3) with lines " );
+    fprintf( f, "title \"Hough Transform with parabola distance " );
+    fprintf( f, "(%.2f %s, %.2f %s)\"", hg->pxdist, hg->ss->xunits,
+                                        hg->pydist, hg->ss->yunits );
 }

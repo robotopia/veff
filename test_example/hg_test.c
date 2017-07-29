@@ -37,10 +37,10 @@ int main()
     hg.y0mask    = 4.0;
     hg.xmask     = 1.6;
     hg.ymask     = 1.4;
-    hg.pxdist    = 0.2;
-    hg.pydist    = 0.2;
+    hg.pxdist    = 0.5;
+    hg.pydist    = 0.5;
     hg.logspace  = 1;
-    hg_malloc( &hg, 200 );
+    hg_malloc( &hg, 1000 );
 
     hg_calc_transform( &hg );
 
@@ -62,7 +62,7 @@ int main()
     fclose(f);
 
     f = fopen("mwa_cropped_Q2.hg.gpi", "w");
-    hg_write_gnuplot( f, &hg, "mwa_cropped_Q2.hg" );
+    hg_write_gnuplot( f, &hg, "mwa_cropped_Q2.hg.txt" );
     fclose(f);
 
     ss_free( &ss );
