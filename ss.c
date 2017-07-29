@@ -233,9 +233,31 @@ void ss_write_gnuplot( FILE *f, struct sec_spect *ss,
     double ymin = ss_yunits( ss, 0 );
     double ymax = ss_yunits( ss, ss->ysize-1 );
 
-    fprintf( f, "set xrange [%lf:%lf] noextend\n", xmin, xmax );
-    fprintf( f, "set yrange [%lf:%lf] noextend\n", ymin, ymax );
-    fprintf( f, "set cbrange [%lf:%lf] noextend\n\n", ss->cbmin, ss->cbmax );
+    int cbrange = 0;
+    char cbmin[16], cbmax[16];
+    if (isnan(ss->cbmin))
+        sprintf( cbmin, "*" );
+    else
+    {
+        cbrange = 1;
+        fprintf( f, "cbmin = %lf\n", ss->cbmin );
+        sprintf( cbmin, "cbmin" );
+    }
+
+    if (isnan(ss->cbmax))
+        sprintf( cbmax, "*" );
+    else
+    {
+        cbrange = 1;
+        fprintf( f, "cbmax = %lf\n", ss->cbmax );
+        sprintf( cbmax, "cbmax" );
+    }
+
+    if (cbrange)
+        fprintf( f, "set cbrange [%s:%s] noextend\n\n", cbmin, cbmax );
+
+    fprintf( f, "set xrange [%lf:%lf] noextend\n",   xmin, xmax );
+    fprintf( f, "set yrange [%lf:%lf] noextend\n\n", ymin, ymax );
 
     if (border)
     {
