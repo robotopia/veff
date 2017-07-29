@@ -90,8 +90,8 @@ int main( int argc, char *argv[] )
     sprintf(ss.xunits, "mHz");
     sprintf(ss.yunits, "μs");
     ss.is_dB = 0;
-    ss.cbmin = nan;
-    ss.cbmax = nan;
+    ss.cbmin = NAN;
+    ss.cbmax = NAN;
 
     double min_x = -20.0;
     double max_x = -20.0;
@@ -118,7 +118,6 @@ int main( int argc, char *argv[] )
     {
 
         static struct option long_options[] = {
-            {"ssdata",   required_argument, NULL, 's'},
             {"orig",     required_argument, NULL, 'o'},
             {"res",      required_argument, NULL, 'r'},
             {"xrange",   required_argument, NULL, 'x'},
@@ -143,7 +142,7 @@ int main( int argc, char *argv[] )
 
         int option_index = 0;
 
-        c = getopt_long(argc, argv, "A:B:c:C:D:hlLm:n:o:pPqQr:s:x:y:", long_options, &option_index);
+        c = getopt_long(argc, argv, "A:B:c:C:D:hlLm:n:o:pPqQr:x:y:", long_options, &option_index);
 
         if (c == -1)
             break;
@@ -157,7 +156,7 @@ int main( int argc, char *argv[] )
                 out = strdup(optarg);
                 break;
             case 'c':
-                nscan = sscanf(optarg, "%lf,%lf", &hg.cbmin, &hg.cbmax);
+                nscan = sscanf(optarg, "%lf,%lf", &ss.cbmin, &ss.cbmax);
                 if (nscan != 2)
                 {
                     fprintf(stderr, "error: couldn't parse --cbrange=%s as MIN,MAX\n", optarg);
@@ -182,7 +181,7 @@ int main( int argc, char *argv[] )
                 hg.logspace = 1;
                 break;
             case 'm':
-                nscan = sscanf(optarg, "%lf,%lf", &hg.mask_x, &hg.mask_y);
+                nscan = sscanf(optarg, "%lf,%lf", &hg.xmask, &hg.ymask);
                 if (nscan != 2)
                 {
                     fprintf(stderr, "error: couldn't parse --mask=%s as X,Y\n", optarg);
@@ -238,8 +237,6 @@ int main( int argc, char *argv[] )
                     exit(EXIT_FAILURE);
                 }
                 break;
-            case 's':
-                sprintf(ss.dat_filename, optarg);
             case 'x':
                 nscan = sscanf(optarg, "%lf,%lf", &min_x, &max_x);
                 if (nscan != 2)
@@ -331,7 +328,7 @@ int main( int argc, char *argv[] )
     if (hggpi)
     {
         f = fopen( hggpi, "w" );
-        ss_write( f, &hg, out );
+        hg_write_gnuplot( f, &hg, out );
         fclose(f);
     }
 
