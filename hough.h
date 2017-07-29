@@ -9,6 +9,9 @@
 #define HG_Q3  1<<2
 #define HG_Q4  1<<3
 
+#define HG_BINARY  0
+#define HG_ASCII   1
+
 struct hough {
     struct sec_spect *ss;      // A pointer to the secondary spectrum on which the Hough Transform is to be operated
     int    quadrant;           // Which quadrant(s) to include: HG_Q1 | HG_Q2 | HG_Q3 | HG_Q4
@@ -38,7 +41,7 @@ double hg_a_to_idx( struct hough *hg, double a );
 void hg_calc_transform( struct hough *hg );
 
 void hg_read( FILE *f, struct hough *hg );
-void hg_write( FILE *f, struct hough *hg );
+void hg_write( FILE *f, struct hough *hg, int filetype );
 
 void hg_write_gnuplot( FILE *f, struct hough *hg, char *filename );
 

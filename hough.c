@@ -73,6 +73,22 @@ void hg_calc_transform( struct hough *hg )
         exit(EXIT_FAILURE);
     }
 
+    // Check that the arange is sensible
+    if (hg->amin >= hg->amax)
+    {
+        fprintf( stderr, "error: bad curvature limits (%lf,%lf)\n",
+                hg->amin, hg->amax );
+        exit(EXIT_FAILURE);
+    }
+
+    // Reset values to zero
+    int i;
+    for (i = 0; i < hg->size; i++)
+    {
+        hg->npixels[i]   = 0;
+        hg->transform[i] = 0.0;
+    }
+
     // Loop over pixels, first in x-direction
     int xidx, yidx, aidx;
     double x, y, a; // x coord; y coord; curvature paramater
@@ -85,7 +101,10 @@ void hg_calc_transform( struct hough *hg )
 
         // Ignore pixels closer than "xmask" to the y-axis
         if (fabs(x) < hg->xmask)
+        {
+fprintf(stderr, "(%.2f,N/A) too close to y-axis\n", x);
             continue;
+        }
 
         // Loop over pixels in y-direction
         for (yidx = 0; yidx < ss->ysize; yidx++)
@@ -94,43 +113,59 @@ void hg_calc_transform( struct hough *hg )
 
             // Ignore pixels closer than "ymask" to the x-axis
             if (fabs(y) < hg->ymask)
+            {
+fprintf(stderr, "(%.2f,%.2f) too close to x-axis\n", x, y);
                 continue;
+            }
 
             // Ignore pixels in the wrong quadrants
-            if (!(hg->quadrant & HG_Q1) && (x > 0.0) && (y > 0.0))  continue;
-            if (!(hg->quadrant & HG_Q2) && (x < 0.0) && (y > 0.0))  continue;
-            if (!(hg->quadrant & HG_Q3) && (x < 0.0) && (y < 0.0))  continue;
-            if (!(hg->quadrant & HG_Q4) && (x > 0.0) && (y < 0.0))  continue;
+            if (!(hg->quadrant & HG_Q1) && (x > 0.0) && (y > 0.0))
+            {
+fprintf(stderr, "(%.2f,%.2f) in Q1\n", x, y);
+                continue;
+            }
+            if (!(hg->quadrant & HG_Q2) && (x < 0.0) && (y > 0.0))
+            {
+fprintf(stderr, "(%.2f,%.2f) in Q2\n", x, y);
+                continue;
+            }
+            if (!(hg->quadrant & HG_Q3) && (x < 0.0) && (y < 0.0))
+            {
+fprintf(stderr, "(%.2f,%.2f) in Q3\n", x, y);
+                continue;
+            }
+            if (!(hg->quadrant & HG_Q4) && (x > 0.0) && (y < 0.0))
+            {
+fprintf(stderr, "(%.2f,%.2f) in Q4\n", x, y);
+                continue;
+            }
 
             // Ignore pixels too close to the origin
             yn = y / hg->y0mask;
-            if (hypot(xn,yn) > 1.0)
-                continue;
-
-            // Test closeness to parabola
-            for (aidx = 0; aidx < hg->size; aidx++)
+            if (hypot(xn,yn) <= 1.0)
             {
-                a = hg_idx_to_a( hg, aidx );
+fprintf(stderr, "(%.2f,%.2f) too close to origin\n", x, y);
+                continue;
+            }
 
-                // Check the horizontal distance to the parabola
-                if (hg->pxdist > 0.0)
-                {
-                    xdist = x - sqrt(y/a);
-                    if (fabs(xdist) > hg->pxdist)
-                        continue;
-                }
-
-                // Check the vertical distance to the parabola
-                if (hg->pydist > 0.0)
-                {
-                    ydist = y - a*x*x;
-                    if (fabs(ydist) > hg->pydist)
-                        continue;
-
-                }
-
-                // We've survived all the checks, so include this pixel
-                // in the Hough Transform
+            // Find all sufficiently close parabolas
+            double xleft   = x - hg->pxdist;
+            double xright  = x + hg->pxdist;
+            double ybottom = y - hg->pydist;
+            double ytop    = y + hg->pydist;
+            double axmin = y / (xleft*xleft);
+            double axmax = y / (xright*xright);
+            double aymin = ybottom / (x*x);
+            double aymax = ytop    / (x*x);
+            // Choose the most limiting of the two mins and maxs
+            double amin = (axmin > aymin ? axmin : aymin);
+            double amax = (axmax < aymax ? axmax : aymax);
+            // Make sure they don't exceed the allowed limits
+            int amin_idx = (int) hg_a_to_idx(hg, amin < hg->amin ? hg->amin : amin);
+            int amax_idx = (int)(hg_a_to_idx(hg, amax > hg->amax ? hg->amax : amax)+1.0);
+fprintf(stderr, "(%.2f,%.2f) found %d allowed parabolas between a=%lf[%d->%d] and a=%lf[%d->%d]\n", x, y, amax_idx - amin_idx + 1, amin, (int)hg_a_to_idx(hg, amin), amin_idx, amax, (int)(hg_a_to_idx(hg, amax)+1.0), amax_idx);
+            for (aidx = amin_idx; aidx <= amax_idx; aidx++)
+            {
                 hg->transform[aidx] += ss->data[xidx][yidx];
                 hg->npixels[aidx]++;
             }
@@ -159,30 +194,45 @@ void hg_read( FILE *f, struct hough *hg )
     fread( &hg->logspace,  sizeof(int),    1, f );
     fread( &size,          sizeof(int),    1, f );
     hg_malloc( hg, size );
-    fread( &hg->npixels,   sizeof(int),    hg->size, f );
-    fread( &hg->transform, sizeof(double), hg->size, f );
+    fread( hg->npixels,    sizeof(int),    hg->size, f );
+    fread( hg->transform,  sizeof(double), hg->size, f );
 }
 
 
-void hg_write( FILE *f, struct hough *hg )
+void hg_write( FILE *f, struct hough *hg, int filetype )
 /* Dump contents of hough struct to file.
  * f = file handle
  * hg = pointer to hough struct to be written out
  */
 {
-    fwrite( &hg->quadrant,  sizeof(int), 1, f );
-    fwrite( &hg->amin,      sizeof(double), 1, f );
-    fwrite( &hg->amax,      sizeof(double), 1, f );
-    fwrite( &hg->x0mask,    sizeof(double), 1, f );
-    fwrite( &hg->y0mask,    sizeof(double), 1, f );
-    fwrite( &hg->xmask,     sizeof(double), 1, f );
-    fwrite( &hg->ymask,     sizeof(double), 1, f );
-    fwrite( &hg->pxdist,    sizeof(double), 1, f );
-    fwrite( &hg->pydist,    sizeof(double), 1, f );
-    fwrite( &hg->logspace,  sizeof(int),    1, f );
-    fwrite( &hg->size,      sizeof(int),    1, f );
-    fwrite( &hg->npixels,   sizeof(int),    hg->size, f );
-    fwrite( &hg->transform, sizeof(double), hg->size, f );
+    int i; // Generic loop counter
+
+    switch (filetype)
+    {
+        case HG_BINARY:
+            fwrite( &hg->quadrant,  sizeof(int),    1, f );
+            fwrite( &hg->amin,      sizeof(double), 1, f );
+            fwrite( &hg->amax,      sizeof(double), 1, f );
+            fwrite( &hg->x0mask,    sizeof(double), 1, f );
+            fwrite( &hg->y0mask,    sizeof(double), 1, f );
+            fwrite( &hg->xmask,     sizeof(double), 1, f );
+            fwrite( &hg->ymask,     sizeof(double), 1, f );
+            fwrite( &hg->pxdist,    sizeof(double), 1, f );
+            fwrite( &hg->pydist,    sizeof(double), 1, f );
+            fwrite( &hg->logspace,  sizeof(int),    1, f );
+            fwrite( &hg->size,      sizeof(int),    1, f );
+            fwrite( hg->npixels,    sizeof(int),    hg->size, f );
+            fwrite( hg->transform,  sizeof(double), hg->size, f );
+            break;
+        case HG_ASCII:
+            for (i = 0; i < hg->size; i++)
+                fprintf( f, "%d %lf\n", hg->npixels[i], hg->transform[i] );
+            break;
+        default:
+            fprintf( stderr, "error: unrecognised hough output format\n" );
+            exit(EXIT_FAILURE);
+            break;
+    }
 }
 
 
