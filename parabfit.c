@@ -12,47 +12,72 @@ void usage()
     printf( "usage: parabfit [OPTIONS] DATAFILE\n" );
     printf( "\n" );
     printf( "  DATAFILE\n" );
-    printf( "    The file containing the secondary " );
-    printf( "spectrum data. Should be a text file with three\n" );
-    printf( "    columns of number: \"xpixel ypixel value\"\n\n" );
-    printf( "  OPTIONS\n" );
-    printf( "    --orig=X,Y      The X,Y values (in units matching " );
-    printf( "DATAFILE) corresponding to the origin [default = 0,0]\n" );
-    printf( "    --units=X,Y     Units of the secondary spectrum's " );
-    printf( "x/y-axes   [default = 0,0]\n" );
-    printf( "    --res=X,Y       The resolution of the x/y axis " );
-    printf( "[default = (1.0, 1.0)]\n" );
-    printf( "    --xrange=LO,HI  The min/max X to consider (mHz)  " );
-    printf( "[default = (-20.0,20.0)]\n" );
-    printf( "    --yrange=LO,HI  The min/max Y to consider (us)   " );
-    printf( "[default = (0.0,20.0)] (values < - will default to 0)\n" );
-    printf( "    --mask=X,Y      Data points <= this distance from the " );
-    printf( "x/y-axis will be masked   " );
-    printf( "[default = (1.5, 1.5)]\n" );
-    printf( "    --omask=OX,OY   Data points <= this ellipse at the " );
-    printf( "origin will be masked   " );
-    printf( "[default = (4.0, 4.0)]\n" );
-    printf( "    --cbrange=MIN,MAX  Set dynamic range of output\n" );
-    printf( "    --pdist=DX,DY   Parabola \"thickness\" to consider " );
-    printf( "[default = 1.0,1.0]\n" );
-    printf( "    --dB            Input values are in dB units " );
-    printf( "[default = off]\n" );
-    printf( "    --logspace      Sample curvatures evenly in log space" );
-    printf( "[default = off]\n" );
-    printf( "    --curves=START:END:N  Sample N curvatures in the Hough " );
-    printf( "Transform, from START to END  " );
-    printf( "[default = 0.1:10.0:1000]\n" );
+    printf( "    The file containing the secondary "
+                "spectrum data. Should be a text file with three\n" );
+    printf( "    columns of numbers: \"xpixel ypixel value\"\n\n" );
+    printf( "  INPUT OPTIONS\n" );
+    printf( "    --orig=X,Y\n" );
+    printf( "        The X,Y values (in units matching " 
+                    "DATAFILE) corresponding to the origin\n" );
+    printf( "        [default = 0.0,0.0]\n" );
+    printf( "    --units=X,Y\n" );
+    printf( "        Units of the secondary spectrum's x/y-axes\n" );
+    printf( "        [default = mHz,μs]\n" );
+    printf( "    --res=X,Y\n" );
+    printf( "        The resolution of the x/y axis\n" );
+    printf( "        [default = 1.0,1.0]\n" );
+    printf( "    --xrange=LO,HI\n" );
+    printf( "        The min/max X to consider\n" );
+    printf( "        [default = (-20.0,20.0)]\n" );
+    printf( "    --yrange=LO,HI\n" );
+    printf( "        The min/max Y to consider\n" );
+    printf( "        [default = (0.0,20.0)]\n" );
+    printf( "    --mask=X,Y\n" );
+    printf( "        Data points <= this distance from the "
+                    "x/y-axis will be masked\n" );
+    printf( "        [default = (1.5, 1.5)]\n" );
+    printf( "    --omask=OX,OY\n" );
+    printf( "        Data points <= this ellipse at the "
+                    "origin will be masked\n" );
+    printf( "        [default = (4.0, 4.0)]\n" );
+    printf( "    --pdist=DX,DY\n" );
+    printf( "        Parabola \"thickness\" to consider\n" );
+    printf( "        [default = 1.0,1.0]\n" );
+    printf( "    --dB\n" );
+    printf( "        Secondary spectrum values are in dB units\n" );
+    printf( "        [default = off]\n" );
+    printf( "    --logspace\n");
+    printf( "        Sample curvatures evenly in log space\n" );
+    printf( "        [default = off]\n" );
+    printf( "    --curves=START:END:N\n" );
+    printf( "        Sample N curvatures in the Hough Transform, "
+                    "from START to END\n" );
+    printf( "        [default = 0.1:10.0:1000]\n" );
     printf( "    --q1, --q2, --q3, --q4\n" );
-    printf( "                    Sum over pixels in quadrants 1,2,3,4. " );
-    printf( "If any are supplied, the defaults are not used  " );
-    printf( "[default = --q1 and --q2]\n" );
-    printf( "    --out=FILE      File to write the transform results to  " );
-    printf( "    --hggpi=FILE    File to write a gnuplot script for " );
-    printf( "viewing the Hough transform to    " );
-    printf( "    --crop=FILE     File to write the cropped solution to   " );
-    printf( "    --ssgpi=FILE    File to write a gnuplot script for " );
-    printf( "viewing the (cropped) secondary spectrum to    " );
-    printf( "    -h, --help      Display this help and exit\n" );
+    printf( "        Sum over pixels in quadrants 1 (top right), 2 (top "
+                    "left), 3 (bottom left),\n") ;
+    printf( "        4 (bottom right). If any are supplied, the defaults "
+                    "are not used\n" );
+    printf( "        [default = --q1 and --q2]\n\n" );
+    printf( "  OUTPUT OPTIONS\n" );
+    printf( "    --out=FILE\n" );
+    printf( "        File to write the transform results to\n" );
+    printf( "    --hggpi=FILE\n" );
+    printf( "        File to write a gnuplot script for viewing the Hough "
+                    "viewing the Hough\n" );
+    printf( "        transform\n" );
+    printf( "    --crop=FILE\n" );
+    printf( "        File to write the cropped solution to\n" );
+    printf( "    --ssgpi=FILE\n" );
+    printf( "        File to write a gnuplot script for viewing the (cropped) "
+                    "secondary spectrum\n" );
+    printf( "    --cbrange=MIN,MAX\n" );
+    printf( "        Set dynamic range of output. If none are supplied, "
+                    "the gnuplot script will be\n" );
+    printf( "        set to auto-detect\n\n" );
+    printf( "  OTHER OPTIONS\n" );
+    printf( "    -h, --help\n" );
+    printf( "        Display this help and exit\n" );
     printf( "\n" );
 }
 
