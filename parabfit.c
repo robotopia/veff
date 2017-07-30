@@ -126,10 +126,10 @@ int main( int argc, char *argv[] )
     hg.quadrant = 0; // i.e. no quadrants; empty
     hg.amin     = 0.1;
     hg.amax     = 10.0;
-    hg.x0mask   = 1.5;
-    hg.y0mask   = 1.5;
-    hg.xmask    = 4.0;
-    hg.ymask    = 4.0;
+    hg.x0mask   = 0.0;
+    hg.y0mask   = 0.0;
+    hg.xmask    = 0.0;
+    hg.ymask    = 0.0;
     hg.pxdist   = 1.0;
     hg.pydist   = 1.0;
     hg.logspace = 0;
@@ -149,6 +149,7 @@ int main( int argc, char *argv[] )
             {"yrange",   required_argument, NULL, 'y'},
             {"mask",     required_argument, NULL, 'm'},
             {"omask",    required_argument, NULL, 'M'},
+            {"pdist",    required_argument, NULL, 'N'},
             {"cbrange",  required_argument, NULL, 'c'},
             {"dB",       no_argument,       NULL, 'l'},
             {"logspace", no_argument,       NULL, 'L'},
@@ -167,7 +168,7 @@ int main( int argc, char *argv[] )
 
         int option_index = 0;
 
-        c = getopt_long(argc, argv, "A:B:c:C:D:hlLm:n:o:pPqQr:x:y:", long_options, &option_index);
+        c = getopt_long(argc, argv, "A:B:c:C:D:hlLm:n:N:o:pPqQr:x:y:", long_options, &option_index);
 
         if (c == -1)
             break;
@@ -218,7 +219,7 @@ int main( int argc, char *argv[] )
                 nscan = sscanf(optarg, "%lf,%lf", &hg.x0mask, &hg.y0mask);
                 if (nscan != 2)
                 {
-                    fprintf(stderr, "error: couldn't parse --omask=%s as DX,DY\n", optarg);
+                    fprintf(stderr, "error: couldn't parse --omask=%s as OX,OY\n", optarg);
                     usage();
                     exit(EXIT_FAILURE);
                 }
@@ -228,6 +229,15 @@ int main( int argc, char *argv[] )
                 if (nscan != 3)
                 {
                     fprintf(stderr, "error: couldn't parse --curves=%s as START:END:N\n", optarg);
+                    usage();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 'N':
+                nscan = sscanf(optarg, "%lf,%lf", &hg.pxdist, &hg.pydist);
+                if (nscan != 2)
+                {
+                    fprintf(stderr, "error: couldn't parse --pdist=%s as DX,DY\n", optarg);
                     usage();
                     exit(EXIT_FAILURE);
                 }
