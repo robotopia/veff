@@ -283,9 +283,9 @@ void ss_write_gnuplot( FILE *f, struct sec_spect *ss,
     fprintf( f, "set samples 10000\n\n" );
 
     fprintf( f, "plot '%s' binary \\\n", filename );
-    fprintf( f, "    skip=%d \\\n",  6*sizeof(double) +
-                                    64*sizeof(char)   +
-                                     3*sizeof(int)      );
+    fprintf( f, "    skip=%ld \\\n",  6*sizeof(double) +
+                                     64*sizeof(char)   +
+                                      3*sizeof(int)      );
     fprintf( f, "    array=(%d,%d) \\\n", ss->xsize, ss->ysize );
     fprintf( f, "    scan=yx \\\n" );
     fprintf( f, "    origin=(%lf,%lf) \\\n", xmin, ymin );

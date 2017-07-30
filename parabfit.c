@@ -94,9 +94,6 @@ int main( int argc, char *argv[] )
         exit(EXIT_FAILURE);
     }
 
-    // Generic counters
-    int i,j;
-
     // Get values from input file
     struct sec_spect ss;
     struct hough hg;

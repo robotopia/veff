@@ -3,13 +3,47 @@
 \usepackage{fullpage}
 \usepackage{amsmath}
 
-\title{Documentation for \texttt{veff} suite}
+\title{Documentation for the \texttt{veff} package}
 \author{Sam McSweeney}
+
+\newcommand{\veff}{\texttt{veff}}
+\newcommand{\parabfit}{\texttt{parabfit}}
+\newcommand{\ggb}{\texttt{ggb}}
+
+\newcommand{\x}{\texttt{x}}
+\newcommand{\y}{\texttt{y}}
+\newcommand{\s}{\texttt{s}}
 
 \begin{document}
 
 \maketitle
 
-\section{Introduction}
+\section{Overview}
+
+\veff{} is a set of programs designed for the analysis of pulsar secondary spectra.
+It comprises three components: \parabfit{}, \veff{}, and \ggb{}.
+\begin{itemize}
+    \item \underline{\parabfit}: Fits a parabola to a secondary spectrum of the pulsar.
+    \item \underline{\veff}: Analyses the relative motions of the Earth and the pulsar, projected onto the plane of the sky.
+    \item \underline{\ggb}: Creates a visualisation of the Earth/pulsar system using the program Geogebra.
+\end{itemize}
+
+\section{Installation}
+
+\section{The \parabfit{} program}
+
+\parabfit{} takes as input a secondary spectrum of a pulsar and outputs the curvature of a fitted parabola.
+The parabola fit is obtained via a generalised Hough Transform, with user-specified search parameters.
+
+\subsection{Secondary spectrum format}
+
+The secondary spectrum must be a text file containing three columns of numbers, here labeled \x{}, \y{}, and \s{}, respectively representing the $x$-coordinate, the $y$-coordinate, and the value at those coordinates of the secondary spectrum.
+\x{} and \y{} \emph{must} be integers with the bottom-left pixel of the secondary spectrum corresponding to (\x{},\y{}) = (1,1).
+The order of the lines do not matter, except that the last line must contain the top-right pixel.
+(This is because the last line is used to discover how large to make the 2D array.)
+
+\subsection{Command line arguments}
+
+The basic usage of \parabfit{} is
 
 \end{document}

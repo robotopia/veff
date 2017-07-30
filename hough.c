@@ -91,9 +91,8 @@ void hg_calc_transform( struct hough *hg )
 
     // Loop over pixels, first in x-direction
     int xidx, yidx, aidx;
-    double x, y, a; // x coord; y coord; curvature paramater
+    double x, y;    // x coord; y coord
     double xn, yn;  // scaled distance from axes (for use with x/y0mask)
-    double xdist, ydist;
     for (xidx = 0; xidx < ss->xsize; xidx++)
     {
         x  = ss_xunits( ss, xidx );
