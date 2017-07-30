@@ -11,4 +11,4 @@
 * If you intend to use the veff program, make sure you have first installed the [CSPICE Tooklit for C](https://naif.jpl.nasa.gov/naif/toolkit_C.html) (not required for parabfit).
 * Open the Makefile in the base directory and edit the CSPICE\_DIR and INSTALL\_DIR variables as needed.
 * Run **make** and **make install**
-* For more comprehensive documentation, run **make documentation** (documentation will appear in the doc/ subdirectory.
+* For more comprehensive documentation, run **make documentation** (documentation will appear in the doc/ subdirectory as doc.pdf). This requires pdflatex to be installed on your system.
