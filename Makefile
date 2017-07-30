@@ -4,7 +4,7 @@ CSPICE_DIR = $(HOME)/src/cspice/cspice
 CC = gcc
 LDFLAGS = -lm
 
-TARGETS = veff
+TARGETS = veff parabfit
 
 all: $(TARGETS)
 
@@ -17,15 +17,8 @@ test:
 parabfit: parabfit.c ss.o hough.o
 	gcc -o $@ $^ -lm
 
-bin2asc: bin2asc.c
-	gcc -o $@ $<
-
-#vec.o: vec.c
-#	gcc -c -o $@ $<
-
 install:
-	cp veff $(INSTALL_DIR)
-	cp parabfit $(INSTALL_DIR)
+	cp $(TARGETS) $(INSTALL_DIR)
 
 clean:
 	$(RM) veff *.o
