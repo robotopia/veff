@@ -35,11 +35,11 @@ void usage()
     printf( "    --mask=X,Y\n" );
     printf( "        Data points <= this distance from the "
                     "x/y-axis will be masked\n" );
-    printf( "        [default = (1.5, 1.5)]\n" );
+    printf( "        [default = (0.0, 0.0)]\n" );
     printf( "    --omask=OX,OY\n" );
     printf( "        Data points <= this ellipse at the "
                     "origin will be masked\n" );
-    printf( "        [default = (4.0, 4.0)]\n" );
+    printf( "        [default = (0.0, 0.0)]\n" );
     printf( "    --pdist=DX,DY\n" );
     printf( "        Parabola \"thickness\" to consider\n" );
     printf( "        [default = 1.0,1.0]\n" );

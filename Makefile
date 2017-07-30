@@ -17,6 +17,9 @@ test:
 
 parabfit: parabfit.c ss.o hough.o
 
+documentation:
+	$(MAKE) -C doc
+
 install:
 	cp $(TARGETS) $(INSTALL_DIR)
 
