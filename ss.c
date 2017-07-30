@@ -278,6 +278,10 @@ void ss_write_gnuplot( FILE *f, struct sec_spect *ss,
         fprintf( f, "unset colorbox\n\n" );
     }
 
+    fprintf( f, "unset key\n" );
+    fprintf( f, "set tics out\n" );
+    fprintf( f, "set samples 10000\n\n" );
+
     fprintf( f, "plot '%s' binary \\\n", filename );
     fprintf( f, "    skip=%d \\\n",  6*sizeof(double) +
                                     64*sizeof(char)   +
@@ -287,5 +291,8 @@ void ss_write_gnuplot( FILE *f, struct sec_spect *ss,
     fprintf( f, "    origin=(%lf,%lf) \\\n", xmin, ymin );
     fprintf( f, "    format=\"%%double\" \\\n" );
     fprintf( f, "    dx=%lf dy=%lf \\\n", ss->dx, ss->dy );
-    fprintf( f, "    with image notitle\n" );
+    fprintf( f, "    with image notitle" );
+    // NB: the lack of newline on the end of the last line is deliberate;
+    // this is taken advantage of in one of the hough gnuplot-writing
+    // functions which appends more plots to the same line.
 }

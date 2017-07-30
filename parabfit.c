@@ -133,7 +133,7 @@ int main( int argc, char *argv[] )
     hg.pxdist   = 1.0;
     hg.pydist   = 1.0;
     hg.logspace = 0;
-    hg.size     = 1000;
+    int size    = 1000;
 
     // Parse options
 
@@ -225,7 +225,7 @@ int main( int argc, char *argv[] )
                 }
                 break;
             case 'n':
-                nscan = sscanf(optarg, "%lf:%lf:%lf", &hg.amin, &hg.amax, &hg.size);
+                nscan = sscanf(optarg, "%lf:%lf:%d", &hg.amin, &hg.amax, &size);
                 if (nscan != 3)
                 {
                     fprintf(stderr, "error: couldn't parse --curves=%s as START:END:N\n", optarg);
@@ -250,6 +250,9 @@ int main( int argc, char *argv[] )
                     usage();
                     exit(EXIT_FAILURE);
                 }
+                // Minus 1 to convert to zero-offset numbers
+                ss.x_orig -= 1.0;
+                ss.y_orig -= 1.0;
                 break;
             case 'p':
                 hg.quadrant |= HG_Q1;
@@ -339,6 +342,7 @@ int main( int argc, char *argv[] )
     hg.ss = &ss_cropped;
 
     // Hough Transform
+    hg_malloc( &hg, size );
     hg_calc_transform( &hg );
 
     // Write out the results
@@ -357,7 +361,7 @@ int main( int argc, char *argv[] )
     if (ssgpi)
     {
         f = fopen( ssgpi, "w" );
-        ss_write_gnuplot( f, &ss_cropped, crop, 1 );
+        hg_write_ssmarkup_gnuplot( f, &hg, crop, 1 );
         fclose(f);
     }
     if (hggpi)

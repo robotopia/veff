@@ -44,5 +44,7 @@ void hg_read( FILE *f, struct hough *hg );
 void hg_write( FILE *f, struct hough *hg, int filetype );
 
 void hg_write_gnuplot( FILE *f, struct hough *hg, char *filename );
+void hg_write_ssmarkup_gnuplot( FILE *f, struct hough *hg, char *filename,
+        int border );
 
 #endif

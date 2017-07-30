@@ -218,6 +218,7 @@ void hg_write( FILE *f, struct hough *hg, int filetype )
 
 
 void hg_write_gnuplot( FILE *f, struct hough *hg, char *filename )
+/* Writes a gnuplot script for viewing the hough transform result */
 {
     if (hg->logspace)
         fprintf( f, "set logscale x\n\n" );
@@ -234,4 +235,36 @@ void hg_write_gnuplot( FILE *f, struct hough *hg, char *filename )
     fprintf( f, "title \"Hough Transform with parabola distance " );
     fprintf( f, "(%.2f %s, %.2f %s)\"", hg->pxdist, hg->ss->xunits,
                                         hg->pydist, hg->ss->yunits );
+}
+
+
+void hg_write_ssmarkup_gnuplot( FILE *f, struct hough *hg, char *filename,
+        int border )
+/* Writes a gnuplot script for viewing the secondary spectrum, including
+ * mark-up lines showing the best fit parabola and the masks.
+ */
+{
+    struct sec_spect *ss = hg->ss; // A short-hand
+    double xmin = ss_xunits( ss, 0 );
+    double xmax = ss_xunits( ss, ss->xsize-1 );
+    double ymin = ss_yunits( ss, 0 );
+    double ymax = ss_yunits( ss, ss->ysize-1 );
+
+    // First, write the secondary spectrum gnuplot script like normal
+    ss_write_gnuplot( f, ss, filename, border );
+    fprintf( f, ", \\\n" ); // (continue on the next line)
+
+    // Now append the lines for the masks
+    fprintf( f, "%lf*sqrt(1-(x/%lf)**2) lc rgb 'green' notitle, \\\n",
+            hg->y0mask, hg->x0mask );
+    fprintf( f, "-%lf*sqrt(1-(x/%lf)**2) lc rgb 'green' notitle, \\\n",
+            hg->y0mask, hg->x0mask );
+    fprintf( f, "'-' w l lc rgb 'green' notitle, \\\n" );
+    fprintf( f, "'-' w l lc rgb 'green' notitle, \\\n" );
+    fprintf( f, "'-' w l lc rgb 'green' notitle, \\\n" );
+    fprintf( f, "'-' w l lc rgb 'green' notitle\n" );
+    fprintf( f, "%lf %lf\n%lf %lf\ne\n", -hg->xmask, ymin, -hg->xmask, ymax );
+    fprintf( f, "%lf %lf\n%lf %lf\ne\n",  hg->xmask, ymin,  hg->xmask, ymax );
+    fprintf( f, "%lf %lf\n%lf %lf\ne\n", xmin, -hg->ymask, xmax, -hg->ymask );
+    fprintf( f, "%lf %lf\n%lf %lf\ne\n", xmin,  hg->ymask, xmax,  hg->ymask );
 }

@@ -13,6 +13,7 @@ parabfit: ss.out
 				--logspace \
 				--curves=0.1:2.0:1000 \
 				--q1 --q2 \
+				--cbrange=-55,-38 \
 				--out=mwa_cropped_Q12.hg.txt \
 				--hggpi=mwa_cropped_Q12.hg.gpi \
 				--crop=mwa_cropped.ss \
