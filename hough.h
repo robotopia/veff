@@ -39,6 +39,7 @@ double hg_idx_to_a( struct hough *hg, int idx );
 double hg_a_to_idx( struct hough *hg, double a );
 
 void hg_calc_transform( struct hough *hg );
+double hg_best_a( struct hough *hg );
 
 void hg_read( FILE *f, struct hough *hg );
 void hg_write( FILE *f, struct hough *hg, int filetype );

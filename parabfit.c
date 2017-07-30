@@ -186,7 +186,6 @@ int main( int argc, char *argv[] )
                 if (nscan != 2)
                 {
                     fprintf(stderr, "error: couldn't parse --cbrange=%s as MIN,MAX\n", optarg);
-                    usage();
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -211,7 +210,6 @@ int main( int argc, char *argv[] )
                 if (nscan != 2)
                 {
                     fprintf(stderr, "error: couldn't parse --mask=%s as X,Y\n", optarg);
-                    usage();
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -220,7 +218,6 @@ int main( int argc, char *argv[] )
                 if (nscan != 2)
                 {
                     fprintf(stderr, "error: couldn't parse --omask=%s as OX,OY\n", optarg);
-                    usage();
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -229,7 +226,6 @@ int main( int argc, char *argv[] )
                 if (nscan != 3)
                 {
                     fprintf(stderr, "error: couldn't parse --curves=%s as START:END:N\n", optarg);
-                    usage();
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -238,7 +234,6 @@ int main( int argc, char *argv[] )
                 if (nscan != 2)
                 {
                     fprintf(stderr, "error: couldn't parse --pdist=%s as DX,DY\n", optarg);
-                    usage();
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -247,7 +242,6 @@ int main( int argc, char *argv[] )
                 if (nscan != 2)
                 {
                     fprintf(stderr, "error: couldn't parse --orig=%s as X,Y\n", optarg);
-                    usage();
                     exit(EXIT_FAILURE);
                 }
                 // Minus 1 to convert to zero-offset numbers
@@ -271,7 +265,6 @@ int main( int argc, char *argv[] )
                 if (nscan != 2)
                 {
                     fprintf(stderr, "error: couldn't parse --res=%s as X,Y\n", optarg);
-                    usage();
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -280,7 +273,6 @@ int main( int argc, char *argv[] )
                 if (nscan != 2)
                 {
                     fprintf(stderr, "error: couldn't parse --xrange=%s as LO,HI\n", optarg);
-                    usage();
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -289,7 +281,6 @@ int main( int argc, char *argv[] )
                 if (nscan != 2)
                 {
                     fprintf(stderr, "error: couldn't parse --yrange=%s as LO,HI\n", optarg);
-                    usage();
                     exit(EXIT_FAILURE);
                 }
                 break;
@@ -370,6 +361,10 @@ int main( int argc, char *argv[] )
         hg_write_gnuplot( f, &hg, out );
         fclose(f);
     }
+
+    // Print out the best curvature to stdout
+    printf( "Best curvature = %lf %s/%s^2\n",
+            hg_best_a( &hg ), ss.yunits, ss.xunits );
 
     // Free memory
     ss_free( &ss );

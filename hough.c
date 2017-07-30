@@ -152,6 +152,25 @@ void hg_calc_transform( struct hough *hg )
 }
 
 
+double hg_best_a( struct hough *hg )
+/* Returns the curvature "a" with the highest value in the transform */
+{
+    double h;
+    double best_h = hg->transform[0] / (double)hg->npixels[0];
+    int aidx, best_aidx = 0;
+    for (aidx = 0; aidx < hg->size; aidx++)
+    {
+        h = hg->transform[aidx] / (double)hg->npixels[aidx];
+        if (h > best_h)
+        {
+            best_aidx = aidx;
+            best_h    = h;
+        }
+    }
+
+    return hg_idx_to_a( hg, best_aidx );
+}
+
 
 void hg_read( FILE *f, struct hough *hg )
 /* Read in hough transform data from file.
@@ -249,12 +268,14 @@ void hg_write_ssmarkup_gnuplot( FILE *f, struct hough *hg, char *filename,
     double xmax = ss_xunits( ss, ss->xsize-1 );
     double ymin = ss_yunits( ss, 0 );
     double ymax = ss_yunits( ss, ss->ysize-1 );
+    double best_a = hg_best_a( hg );
 
     // First, write the secondary spectrum gnuplot script like normal
     ss_write_gnuplot( f, ss, filename, border );
     fprintf( f, ", \\\n" ); // (continue on the next line)
 
     // Now append the lines for the masks
+    fprintf( f, "%lf*x**2 lc rgb 'green' notitle, \\\n", best_a );
     fprintf( f, "%lf*sqrt(1-(x/%lf)**2) lc rgb 'green' notitle, \\\n",
             hg->y0mask, hg->x0mask );
     fprintf( f, "-%lf*sqrt(1-(x/%lf)**2) lc rgb 'green' notitle, \\\n",
