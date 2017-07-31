@@ -136,8 +136,10 @@ void hg_calc_transform( struct hough *hg )
             double aymin = ybottom / (x*x);
             double aymax = ytop    / (x*x);
             // Choose the most limiting of the two mins and maxs
-            double amin = (axmin > aymin ? axmin : aymin);
-            double amax = (axmax < aymax ? axmax : aymax);
+            double amin = (x/y < 0.0 ? (axmin > aymin ? axmin : aymin) : 
+                                       (axmin < aymin ? axmin : aymin));
+            double amax = (x/y < 0.0 ? (axmax < aymax ? axmax : aymax) :
+                                       (axmax > aymax ? axmax : aymax));
             // Make sure they don't exceed the allowed limits
             int amin_idx = (int) hg_a_to_idx(hg, amin < hg->amin ? hg->amin : amin);
             int amax_idx = (int)(hg_a_to_idx(hg, amax > hg->amax ? hg->amax : amax)+1.0);
