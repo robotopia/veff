@@ -242,6 +242,55 @@ int main( int argc, char *argv[] )
     printf( "\nVelocity of the Earth in 'x,y' coordinates:\n" );
     printf( "  [%lf, %lf]\n", vx, vy );
 
+
+
+
+
+    // Calculate the orbital velocity vector
+    vec ascnode;
+    ascnode.x = cos(pd.bigom);
+    ascnode.y = sin(pd.bigom);
+    ascnode.z = 0.0;
+
+    vec ascnode1; // = ascnode cross [0,0,1]
+    ascnode1.x =  ascnode.y;
+    ascnode1.y = -ascnode.x;
+    ascnode1.z = 0.0;
+
+    vec n; // = cosi*[0,0,1] + sini*ascnode1
+    n.x = pd.sini * ascnode1.x;
+    n.y = pd.sini * ascnode1.y;
+    n.z = cosi;
+
+    double a     = pd.a1 * c / pd.sini;
+    double theta = 2*PI*fmod( epoch - pd.t0, pd.pb ) / pd.pb;
+    double r_a   = (1.0 - pd.ecc*pd.ecc) / (1.0 + pd.ecc*cos(theta));
+
+    vec ascnode2; // = n cross ascnode1
+    ascnode2.x = n.y * ascnode1.z  -  n.z * ascnode1.y;
+    ascnode2.y = n.z * ascnode1.x  -  n.x * ascnode1.z;
+    ascnode2.z = n.x * ascnode1.y  -  n.y * ascnode1.x;
+
+    vec rhat;
+    rhat.x = cos(pd.om + theta)*ascnode.x + sin(pd.om + theta)*ascnode2.x;
+    rhat.y = cos(pd.om + theta)*ascnode.y + sin(pd.om + theta)*ascnode2.y;
+    rhat.z = cos(pd.om + theta)*ascnode.z + sin(pd.om + theta)*ascnode2.z;
+
+    vec vbinhat; // = n cross rhat
+    vbinhat.x = n.y*rhat.z - n.z*rhat.y;
+    vbinhat.y = n.z*rhat.x - n.x*rhat.z;
+    vbinhat.z = n.x*rhat.y - n.y*rhat.x;
+
+    double vbin = 2*PI*a / (pd.pb * 24.0 * 60.0 * 60.0 ) * sqrt(2.0/r_a - 1);
+    double vbinx = vbin * vbinhat.x;
+    double vbiny = vbin * vbinhat.y;
+
+    printf( "\n(Orbital) velocity of the pulsar in 'x,y' coordinates:\n" );
+    printf( "  [%lf, %lf]\n", vbinx, vbiny );
+
+
+
+
     if (geogebra)
     {
         printf("\nGeogebra values:\n");
