@@ -26,6 +26,8 @@ void usage()
                         "from\n" );
     printf("             http://naif.jpl.nasa.gov/pub/naif/generic_kernels/"
                         "spk/planets/de430.bsp)\n");
+    printf("    -t THETA The angle of the scattering screen (deg) "
+                        "[default = 0.0]\n");
     printf("    -v       Turn verbose on (=show working)\n");
     printf("\n");
 }
@@ -65,7 +67,8 @@ int main( int argc, char *argv[] )
     double  epoch     = 0.0;   // The epoch in question
     double  freq      = 0.0;   // Observing frequency
     int     verbose   = 0;     // 0 = verbose output off, 1 = verbose output on
-    double  arccurve  = 0.0;   // The arc curvature, in s^3
+    double  arccurve  = NAN;   // The arc curvature, in s^3
+    double  scr_angle = 0.0;   // The angle of the scattering screen
 
     struct pardata pd;         // A container to hold the par file information
 
@@ -77,10 +80,13 @@ int main( int argc, char *argv[] )
     }
 
     int co;
-    while ((co = getopt(argc, argv, "e:f:hp:s:v")) != -1)
+    while ((co = getopt(argc, argv, "a:e:f:hp:s:t:v")) != -1)
     {
         switch (co)
         {
+            case 'a':
+                arccurve = atof(optarg);
+                break;
             case 'e':
                 epoch = atof(optarg);
                 break;
@@ -97,6 +103,9 @@ int main( int argc, char *argv[] )
             case 's':
                 ephemfile = strdup(optarg);
                 break;
+            case 't':
+                scr_angle = atof(optarg);
+                break;
             case 'v':
                 verbose = 1;
                 break;
@@ -112,6 +121,18 @@ int main( int argc, char *argv[] )
     {
         fprintf(stderr, "error: option -p is required\n");
         usage();
+        exit(EXIT_FAILURE);
+    }
+
+    if (isnan(arccurve))
+    {
+        fprintf(stderr, "error: arc curvature (-a) required\n");
+        fprintf(stderr, "Run '%s -h' for options\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+    else if (arccurve <= 0.0)
+    {
+        fprintf(stderr, "error: arc curvature must be > 0\n");
         exit(EXIT_FAILURE);
     }
 
@@ -186,19 +207,21 @@ int main( int argc, char *argv[] )
     double decjr  = DEG2RAD(pd.decjd);
     double tvra   = PM2TV(pd.pmra, pd.dist);
     double tvdec  = PM2TV(pd.pmdec, pd.dist);
+    double cscra  = cos(DEG2RAD(scr_angle));
+    double c2scra = cscra * cscra;
+    double wl     = SPEED_OF_LIGHT / (freq*1e6);
 
     // Other constants
-    double c = 2.99792458e8;
 
     if (verbose) {
         printf("\nOther needed/derived values:\n");
-        printf("  c     = %.4f m/s\n", c);
-        printf("  cosi  = %.12f\n", cosi);
-        printf("  komr  = %.12f rad\n", komr);
-        printf("  rajr  = %.12f rad\n", rajr);
-        printf("  decjr = %.12f rad\n", decjr);
-        printf("  tvra  = %.12f km/s\n", tvra);
-        printf("  tvdec = %.12f km/s\n", tvdec);
+        printf("  c     = %17d m/s\n", SPEED_OF_LIGHT);
+        printf("  cosi  = %17.12f\n", cosi);
+        printf("  komr  = %17.12f rad\n", komr);
+        printf("  rajr  = %17.12f rad\n", rajr);
+        printf("  decjr = %17.12f rad\n", decjr);
+        printf("  tvra  = %17.12f km/s\n", tvra);
+        printf("  tvdec = %17.12f km/s\n", tvdec);
     }
 
     // Set "up" and target reference frame (unit) vectors.
@@ -254,7 +277,7 @@ int main( int argc, char *argv[] )
     n.y = pd.sini * ascnode1.y;
     n.z = cosi;
 
-    double a     = pd.a1 * c / pd.sini;
+    double a     = pd.a1 * SPEED_OF_LIGHT / pd.sini;
     double theta = 2*PI*fmod( epoch - pd.t0, pd.pb ) / pd.pb;
     double r_a   = (1.0 - pd.ecc*pd.ecc) / (1.0 + pd.ecc*cos(theta));
 
@@ -295,8 +318,49 @@ int main( int argc, char *argv[] )
 
 
 
-    // Calculate what s must be
+    // Calculate screen distance, s
+    // V_mu + V_bin
+    double vmubinx = tvx*1e3 + vbinx; // 1e3 is for matching units
+    double vmubiny = tvy*1e3 + vbiny;
 
+    double VA =  vmubinx*vmubinx + vmubiny*vmubiny;
+    double VB = (vearthx*vmubinx + vearthy*vmubiny)*1e3;
+    double VC = (vearthx*vearthx + vearthy*vearthy)*1e6;
+
+    // Calculate 2cη cos²α, where
+    //   c is the speed of light
+    //   η is arc curvature
+    //   α is scattering screen angle
+    double cnc = 2.0 * SPEED_OF_LIGHT * arccurve * c2scra; 
+
+    // Calculate Dλ² where
+    //   D is the distance to the pulsar (m)
+    //   λ is the observing wavelength (m)
+    double Dl2 = KPC2KM(pd.dist) * 1e3 * wl * wl;
+
+    // Solve the quadratic equation for s:
+    //   0 = A1*s² + A2*s + A3
+    double A1 = cnc*(VA - 2.0*VB + VC) + Dl2;
+    double A2 = 2.0*cnc*(-VA + VB) - Dl2;
+    double A3 = cnc*VA;
+
+    double det = A2*A2 - 4.0*A1*A3;
+    double s, s2;
+    if (det < 0)
+    {
+        printf("\nNo solution for s found\n");
+    }
+    else if (det == 0.0)
+    {
+        s = -0.5*A2/A1;
+        printf("\n1 solution found:\n  s = %f\n", s);
+    }
+    else /* (det > 0.0) */
+    {
+        s  = 0.5*(-A2 + sqrt(det))/A1;
+        s2 = 0.5*(-A2 - sqrt(det))/A1;
+        printf("\n2 solutions found:\n  s = [%f, %f]\n", s, s2);
+    }
 
     // Free up memory
     free( par );

@@ -3,7 +3,8 @@
 
 #include <stdio.h>
 
-#define MAXSTRLEN 4096
+#define MAXSTRLEN       4096
+#define SPEED_OF_LIGHT  299792458
 
 #define AU  1.49597871e8 // km
 #define KM2AU(x)    ((x)/AU)
