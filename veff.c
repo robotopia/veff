@@ -17,15 +17,16 @@ void usage()
 {
     printf("usage: veff [OPTIONS]\n");
     printf("  OPTIONS:\n");
+    printf("    -a ETA   Arc curvature (s^3) [required]\n" );
     printf("    -e MJD   MJD epoch to calculate [required]\n");
     printf("    -f FREQ  Observing frequency (MHz) [required]\n");
-    printf("    -g       Turn on Geogebra-style output\n");
     printf("    -h       Display this help and exit\n");
     printf("    -p PAR   Supply (PSRCAT-style) ephemeris file [required]\n");
-    printf("    -s SPK   NASA planetary ephemeris file [required] (e.g.");
-    printf(" from\n             http://naif.jpl.nasa.gov/pub/naif/");
-    printf("generic_kernels/spk/planets/de430.bsp)\n");
-    printf("    -v      Turn verbose on (=show working)\n");
+    printf("    -s SPK   NASA planetary ephemeris file [required] (e.g. "  
+                        "from\n" );
+    printf("             http://naif.jpl.nasa.gov/pub/naif/generic_kernels/"
+                        "spk/planets/de430.bsp)\n");
+    printf("    -v       Turn verbose on (=show working)\n");
     printf("\n");
 }
 
@@ -64,15 +65,9 @@ int main( int argc, char *argv[] )
     double  epoch     = 0.0;   // The epoch in question
     double  freq      = 0.0;   // Observing frequency
     int     verbose   = 0;     // 0 = verbose output off, 1 = verbose output on
-    int     geogebra  = 0;     // 0 = verbose output off, 1 = verbose output on
+    double  arccurve  = 0.0;   // The arc curvature, in s^3
 
     struct pardata pd;         // A container to hold the par file information
-    struct sec_spect ss;       // The secondary spectrum information
-
-    /* Just dummy data for now */
-    ss.dx = 0.0;
-    ss.dy = 0.0;
-    double imgw = 0.0;
 
     // Parse command line options
     if (argc <= 1)
@@ -82,7 +77,7 @@ int main( int argc, char *argv[] )
     }
 
     int co;
-    while ((co = getopt(argc, argv, "e:f:ghp:s:v")) != -1)
+    while ((co = getopt(argc, argv, "e:f:hp:s:v")) != -1)
     {
         switch (co)
         {
@@ -91,9 +86,6 @@ int main( int argc, char *argv[] )
                 break;
             case 'f':
                 freq = atof(optarg);
-                break;
-            case 'g':
-                geogebra = 1;
                 break;
             case 'h':
                 usage();
@@ -179,21 +171,21 @@ int main( int argc, char *argv[] )
         printf("  pb    = %.12f days\n", pd.pb);
         printf("  a1    = %.12f lt sec\n", pd.a1);
         printf("  om    = %.12f deg\n", pd.om);
-        printf("  kom   = %.10f deg\n", pd.kom);
+        printf("  kom   = %.12f deg\n", pd.kom);
         printf("  dist  = %.12f kpc\n", pd.dist);
-        printf("  pmra  = %.10f mas/yr\n", pd.pmra);
-        printf("  pmdec = %.10f mas/yr\n", pd.pmdec);
-        printf("  rajd  = %.10f deg\n", pd.rajd);
-        printf("  decjd = %.10f deg\n", pd.decjd);
+        printf("  pmra  = %.12f mas/yr\n", pd.pmra);
+        printf("  pmdec = %.12f mas/yr\n", pd.pmdec);
+        printf("  rajd  = %.12f deg\n", pd.rajd);
+        printf("  decjd = %.12f deg\n", pd.decjd);
     }
 
     // Derive other values
-    double cosi  = sqrt(1 - pd.sini*pd.sini);
-    double komr  = DEG2RAD(pd.kom);
-    double rajr  = DEG2RAD(pd.rajd);
-    double decjr = DEG2RAD(pd.decjd);
-    double tvra  = PM2TV(pd.pmra, pd.dist);
-    double tvdec = PM2TV(pd.pmdec, pd.dist);
+    double cosi   = sqrt(1 - pd.sini*pd.sini);
+    double komr   = DEG2RAD(pd.kom);
+    double rajr   = DEG2RAD(pd.rajd);
+    double decjr  = DEG2RAD(pd.decjd);
+    double tvra   = PM2TV(pd.pmra, pd.dist);
+    double tvdec  = PM2TV(pd.pmdec, pd.dist);
 
     // Other constants
     double c = 2.99792458e8;
@@ -236,11 +228,11 @@ int main( int argc, char *argv[] )
     // Rotate to line up with the pulsar orbit's line of nodes
     double skomr = sin(komr);
     double ckomr = cos(komr);
-    double vx = ckomr*vI + skomr*vJ;
-    double vy = skomr*vI - ckomr*vJ;
+    double vearthx = ckomr*vI + skomr*vJ;
+    double vearthy = skomr*vI - ckomr*vJ;
 
-    printf( "\nVelocity of the Earth in 'x,y' coordinates:\n" );
-    printf( "  [%lf, %lf]\n", vx, vy );
+    printf( "\nVelocity of the Earth in 'x,y' coordinates (km/s):\n" );
+    printf( "  [%lf, %lf]\n", vearthx, vearthy );
 
 
 
@@ -248,8 +240,8 @@ int main( int argc, char *argv[] )
 
     // Calculate the orbital velocity vector
     vec ascnode;
-    ascnode.x = cos(pd.bigom);
-    ascnode.y = sin(pd.bigom);
+    ascnode.x = ckomr;
+    ascnode.y = skomr;
     ascnode.z = 0.0;
 
     vec ascnode1; // = ascnode cross [0,0,1]
@@ -267,9 +259,9 @@ int main( int argc, char *argv[] )
     double r_a   = (1.0 - pd.ecc*pd.ecc) / (1.0 + pd.ecc*cos(theta));
 
     vec ascnode2; // = n cross ascnode1
-    ascnode2.x = n.y * ascnode1.z  -  n.z * ascnode1.y;
-    ascnode2.y = n.z * ascnode1.x  -  n.x * ascnode1.z;
-    ascnode2.z = n.x * ascnode1.y  -  n.y * ascnode1.x;
+    ascnode2.x = n.y * ascnode.z  -  n.z * ascnode.y;
+    ascnode2.y = n.z * ascnode.x  -  n.x * ascnode.z;
+    ascnode2.z = n.x * ascnode.y  -  n.y * ascnode.x;
 
     vec rhat;
     rhat.x = cos(pd.om + theta)*ascnode.x + sin(pd.om + theta)*ascnode2.x;
@@ -282,41 +274,29 @@ int main( int argc, char *argv[] )
     vbinhat.z = n.x*rhat.y - n.y*rhat.x;
 
     double vbin = 2*PI*a / (pd.pb * 24.0 * 60.0 * 60.0 ) * sqrt(2.0/r_a - 1);
-    double vbinx = vbin * vbinhat.x;
-    double vbiny = vbin * vbinhat.y;
 
-    printf( "\n(Orbital) velocity of the pulsar in 'x,y' coordinates:\n" );
-    printf( "  [%lf, %lf]\n", vbinx, vbiny );
+    double vbinra  = vbin * vbinhat.x;
+    double vbindec = vbin * vbinhat.y;
+
+    double vbinx = ckomr*vbinra + skomr*vbindec;
+    double vbiny = skomr*vbinra - ckomr*vbindec;
+
+    printf( "\n(Orbital) velocity of the pulsar in 'x,y' coordinates (km/s):\n" );
+    printf( "  [%lf, %lf]\n", vbinx*1e-3, vbiny*1e-3 );
 
 
 
+    // Calculate the proper motion (convert from mas/yr to km/s)
+    double tvx = ckomr*tvra + skomr*tvdec;
+    double tvy = skomr*tvra - ckomr*tvdec;
 
-    if (geogebra)
-    {
-        printf("\nGeogebra values:\n");
-        printf("  B_a          = %e\n", pd.a1);
-        printf("  D            = %e\n", pd.dist);
-        printf("  Dec_{Pulsar} = %e\n", decjr);
-        printf("  E_{now}      = (%e, %e, %e)\n",
-                  rn_earth.x, rn_earth.y, rn_earth.z );
-        printf("  P_b          = %e\n", pd.pb);
-        printf("  RA_{Pulsar}  = %e\n", rajr);
-        printf("  T_0          = %e\n", pd.t0);
-        printf("  ecc          = %e\n", pd.ecc);
-        printf("  epoch        = %e\n", epoch);
-        printf("  freq         = %e\n", freq);
-        printf("  img_{dx}     = %e\n", ss.dx);
-        printf("  img_{ratio}  = %e\n", ss.dy/ss.dx);
-        printf("  img_w        = %.0lf\n", imgw);
-        printf("  sini         = %e\n", pd.sini);
-        printf("  v_{E,x}      = %e\n", v_earth.x);
-        printf("  v_{E,y}      = %e\n", v_earth.y);
-        printf("  v_{E,z}      = %e\n", v_earth.z);
-        printf("  v_{μ⟂,Dec}   = %e\n", tvdec);
-        printf("  v_{μ⟂,RA}    = %e\n", tvra);
-        printf("  Ω            = %e\n", pd.bigom);
-        printf("  ω            = %e\n", pd.om);
-    }
+    printf( "\nProper motion of the pulsar in 'x,y' coordinates (km/s):\n" );
+    printf( "  [%lf, %lf]\n", tvx, tvy );
+
+
+
+    // Calculate what s must be
+
 
     // Free up memory
     free( par );

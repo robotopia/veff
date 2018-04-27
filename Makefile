@@ -2,15 +2,15 @@ INSTALL_DIR = /usr/local/bin
 CSPICE_DIR = $(HOME)/src/cspice/cspice
 
 CC = gcc
-LDFLAGS = -lm
-CFLAGS = -Wall -Wextra
+LDFLAGS = -L$(CSPICE_DIR)/lib
+LDLIBS = -lcspice -lm
+CFLAGS = -Wall -Wextra -I$(CSPICE_DIR)/include
 
 TARGETS = veff parabfit
 
 all: $(TARGETS)
 
-veff: veff.c vec.o par.o ss.o hough.o
-	gcc -Wall -Wextra -o $@ $^ -I$(CSPICE_DIR)/include -L$(CSPICE_DIR)/lib -lcspice -lm
+veff: veff.o vec.o par.o ss.o hough.o
 
 test:
 	$(MAKE) -C test_example
